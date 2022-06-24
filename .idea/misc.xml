@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/drawable-v24/edit_text_selector.xml" value="0.20052083333333334" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/drawable/dropdown_shape.xml" value="0.181" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_b_e_v_o_g_upload.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_base.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_be_voice_of_grower.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_c_m_r_data_upload.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_c_m_r_entry.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_c_m_r_update.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_c_m_r_validation.xml" value="0.3333333333333333" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_d_c_e_sign.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_d_c_vendor_form.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_data_upload_sync.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_digital_contract.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_download.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_download_c_m_r_data.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_field_area_tag.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_forgot_password.xml" value="0.184375" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_grower_info.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_grower_issue.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_insurance_upload.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_login.xml" value="0.22" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_main.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_my_travel.xml" value="0.22" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_my_travel_upload.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_register.xml" value="0.1403985507246377" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_splash.xml" value="0.1" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_tag_data_upload.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_upload_sync.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/activity_v_o_c_t.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/dialogcapture.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/fragment_upload_cmr_data.xml" value="0.125" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/layout_grid_home.xml" value="0.1" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/layout_progressbar_with_text.xml" value="0.184375" />
+        <entry key="..\:/Rajshri_Mahyco_Projects/CMR_App/app/src/main/res/layout/searchable_list_dialog.xml" value="0.125" />
+        <entry key="..\:/Users/r/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/drawable-v24/border_btn.xml" value="0.2" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/drawable-v24/edit_text_selector.xml" value="0.2" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/drawable/border.xml" value="0.2" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/drawable/buttonbordet.xml" value="0.2" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/drawable/circle_primary.xml" value="0.1945" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/drawable/circle_white.xml" value="0.2" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/drawable/spinner.xml" value="0.2" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/drawable/spinner_background.xml" value="0.167" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout-v21/fragment_view_travel.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/activity_download.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/activity_login.xml" value="0.182518115942029" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/activity_main.xml" value="0.15534420289855072" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/activity_my_travel.xml" value="0.15534420289855072" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/activity_my_travel_upload.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/activity_travel_report.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/activity_upload_sync.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/custom_layout.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/custom_layout_end_tour.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/dialogcapture.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/fragment_add_even.xml" value="0.12092391304347826" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/fragment_end_travel.xml" value="0.17074275362318841" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/fragment_start_travel.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/fragment_view_travel.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/layout_progressbar_with_text.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/list_item.xml" value="0.1921875" />
+        <entry key="..\:/Users/r/Desktop/android_projects/cmr-app/app/src/main/res/layout/list_item_title.xml" value="0.1921875" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

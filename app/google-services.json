@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "102490381788",
+    "project_id": "crop-monitoring-report---cmr",
+    "storage_bucket": "crop-monitoring-report---cmr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102490381788:android:988a1b16cb1023b60e0319",
+        "android_client_info": {
+          "package_name": "com.mahyco.cmr_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102490381788-7msn60542sh7e6f6rooom11jfhhl5bv6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP5EZsRr7bgJNYSsyXQlQ9mgk5Rx1rB20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102490381788-7msn60542sh7e6f6rooom11jfhhl5bv6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

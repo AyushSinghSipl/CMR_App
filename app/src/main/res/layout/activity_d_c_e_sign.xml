@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.DCESignActivity"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/home_background"
+        android:orientation="vertical">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/dp_5"
+            android:alignmentMode="alignMargins"
+            android:columnCount="1"
+            android:columnOrderPreserved="false"
+            android:rowCount="13">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cd_digital_contract1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/card_height1"
+                android:layout_margin="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_12"
+                app:cardElevation="@dimen/dp_5"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/colorPrimary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20">
+
+
+                    <TextView
+                        android:id="@+id/tv_title1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16"
+                        android:text="@string/title"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_link1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:textColor="@color/white"
+                        android:text="@string/link"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:layout_gravity="center_horizontal">
+
+                        <android.widget.Button
+                            android:id="@+id/btn_esign1"
+                            android:layout_width="@dimen/btn_wdt"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_btn"
+                            android:padding="@dimen/btn_padding"
+                            android:text="@string/e_sign"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_16"
+                            android:textStyle="normal" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cd_digital_contract2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/card_height1"
+                android:layout_margin="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_12"
+                app:cardElevation="@dimen/dp_5"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/colorPrimary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20">
+
+
+                    <TextView
+                        android:id="@+id/tv_title2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16"
+                        android:text="@string/title"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_link2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:textColor="@color/white"
+                        android:text="@string/link"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:layout_gravity="center_horizontal">
+
+                        <android.widget.Button
+                            android:id="@+id/btn_esign2"
+                            android:layout_width="@dimen/btn_wdt"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_btn"
+                            android:padding="@dimen/btn_padding"
+                            android:text="@string/e_sign"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_16"
+                            android:textStyle="normal" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cd_digital_contract3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/card_height1"
+                android:layout_margin="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_12"
+                app:cardElevation="@dimen/dp_5"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/colorPrimary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20">
+
+
+                    <TextView
+                        android:id="@+id/tv_title3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16"
+                        android:text="@string/title"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_link3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:textColor="@color/white"
+                        android:text="@string/link"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:layout_gravity="center_horizontal">
+
+                        <android.widget.Button
+                            android:id="@+id/btn_esign3"
+                            android:layout_width="@dimen/btn_wdt"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_btn"
+                            android:padding="@dimen/btn_padding"
+                            android:text="@string/e_sign"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_16"
+                            android:textStyle="normal" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cd_digital_contract4"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/card_height1"
+                android:layout_margin="@dimen/dp_10"
+                app:cardCornerRadius="@dimen/dp_12"
+                app:cardElevation="@dimen/dp_5"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/colorPrimary">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20">
+
+                    <TextView
+                        android:id="@+id/tv_title4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_16"
+                        android:text="@string/title"
+                        android:textAllCaps="true"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_link4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:textColor="@color/white"
+                        android:text="@string/link"
+                        android:textSize="@dimen/sp_16"
+                        android:textStyle="bold" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_25"
+                        android:layout_gravity="center_horizontal">
+
+                        <android.widget.Button
+                            android:id="@+id/btn_esign4"
+                            android:layout_width="@dimen/btn_wdt"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_btn"
+                            android:padding="@dimen/btn_padding"
+                            android:text="@string/e_sign"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_16"
+                            android:textStyle="normal" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+        </GridLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

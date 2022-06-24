@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/home_background"
+    android:orientation="vertical"
+    tools:context=".view.DCVendorFormActivity">
+
+   <com.google.android.material.tabs.TabLayout
+       android:id="@+id/tabs"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@color/colorPrimary"
+       android:minHeight="?actionBarSize"
+       app:tabGravity="fill"
+       app:tabIndicatorColor="@color/colorPrimaryDark"
+       app:tabIndicatorHeight="4dp"
+       app:tabMode="fixed"
+       app:tabSelectedTextColor="@color/black"
+       app:tabTextColor="@color/white">
+
+   </com.google.android.material.tabs.TabLayout>
+
+
+   <androidx.viewpager.widget.ViewPager
+       android:id="@+id/viewcontainer"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@id/tabs" />
+
+   <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentEnd="true"
+       android:layout_alignParentBottom="true"
+       android:id="@+id/buttonUploadData"
+       android:background="@drawable/circle_primary"
+       android:layout_marginBottom="@dimen/dp_70"
+       android:layout_marginEnd="@dimen/dp_20">
+
+      <ImageView
+          android:layout_width="@dimen/dp_30"
+          android:layout_height="@dimen/dp_30"
+          android:layout_margin="@dimen/dp_5"
+          android:src="@drawable/upload_data" />
+   </LinearLayout>
+
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:gravity="center"
+       android:id="@+id/textTravelComplete"
+       android:visibility="gone"
+       android:text="Travel is completed for today"
+       android:textSize="22dp"/>
+
+   <!-- <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dp_20">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_25"
+                        android:text="@string/start_tour"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tv_tour_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" date"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edt_staff_tfa_tour"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginLeft="@dimen/dp_25"
+                    android:layout_marginTop="@dimen/dp_25"
+                    android:layout_marginRight="@dimen/dp_25"
+                    android:background="@drawable/dropdown_shape"
+                    android:hint="@string/enter_staff_tfa"
+                    android:inputType="number"
+                    android:maxLength="12"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_5"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@drawable/edit_text_selector"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginLeft="@dimen/dp_25"
+                    android:layout_marginTop="@dimen/dp_25"
+                    android:layout_marginRight="@dimen/dp_25"
+                    android:layout_weight="10"
+                    android:background="@drawable/dropdown_shape"
+                    android:orientation="horizontal">
+
+                    <com.mahyco.cmr_app.utils.searchspinner.SearchableSpinner
+                        android:id="@+id/sp_select_vehicle"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_30"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_weight="9"
+                        android:background="@color/white" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="@dimen/dp_30"
+                            android:layout_height="@dimen/dp_30"
+                            android:src="@drawable/ic_action_dropdown" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/edt_start_location_tour"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginLeft="@dimen/dp_25"
+                    android:layout_marginTop="@dimen/dp_25"
+                    android:layout_marginRight="@dimen/dp_25"
+                    android:background="@drawable/dropdown_shape"
+                    android:hint="@string/enter_start_location"
+                    android:inputType="number"
+                    android:maxLength="12"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_5"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@drawable/edit_text_selector"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/edt_start_reading_km_tour"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginLeft="@dimen/dp_25"
+                    android:layout_marginTop="@dimen/dp_25"
+                    android:layout_marginRight="@dimen/dp_25"
+                    android:background="@drawable/dropdown_shape"
+                    android:hint="@string/enter_start_reading_km"
+                    android:inputType="number"
+                    android:maxLength="12"
+                    android:paddingLeft="@dimen/dp_5"
+                    android:paddingRight="@dimen/dp_5"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="@drawable/edit_text_selector"
+                    android:textSize="16sp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginLeft="@dimen/dp_25"
+                    android:layout_marginTop="@dimen/dp_25"
+                    android:layout_marginRight="@dimen/dp_25"
+                    android:layout_weight="10"
+                    android:background="@drawable/dropdown_shape"
+                    android:orientation="horizontal">
+
+                    <com.mahyco.cmr_app.utils.searchspinner.SearchableSpinner
+                        android:id="@+id/sp_visit_purpose"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/dp_30"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_weight="9"
+                        android:background="@color/white" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="@dimen/dp_30"
+                            android:layout_height="@dimen/dp_30"
+                            android:src="@drawable/ic_action_dropdown" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginTop="@dimen/dp_25"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <CheckBox
+                            android:id="@+id/chk_tour_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tour_start1"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        <CheckBox
+                            android:id="@+id/chk_geo_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/geo_tag"
+                            android:layout_marginStart="@dimen/dp_5"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                        <android.widget.Button
+                            android:id="@+id/btn_vehicle_km"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/border_btn_green"
+                            android:gravity="center_horizontal|center"
+                            android:padding="@dimen/btn_padding"
+                            android:text="@string/vehicle_km"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/sp_16"
+                            android:textStyle="normal"
+                            android:layout_marginStart="@dimen/dp_10"/>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <android.widget.Button
+                    android:id="@+id/btn_start_tour"
+                    android:layout_width="@dimen/dp_180"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/dp_25"
+                    android:layout_marginTop="@dimen/dp_25"
+                    android:layout_marginRight="@dimen/dp_25"
+                    android:background="@drawable/border_btn_green"
+                    android:gravity="center_horizontal|center"
+                    android:padding="@dimen/btn_padding"
+                    android:text="@string/tour_start"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_16"
+                    android:textStyle="normal" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/ivImage"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginLeft="@dimen/dp_25"
+                android:layout_marginTop="@dimen/dp_25"
+                android:layout_marginRight="@dimen/dp_25" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include
+        android:id="@+id/llProgressBar"
+        layout="@layout/layout_progressbar_with_text"
+        android:visibility="gone" />-->
+
+   <include
+       android:id="@+id/llProgressBar"
+       layout="@layout/layout_progressbar_with_text"
+       android:visibility="gone" />
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignParentEnd="true"
+       android:layout_alignParentBottom="true"
+       android:text="ver"
+       android:id="@+id/textViewVersionName"
+       android:layout_marginHorizontal="@dimen/dp_10"
+       android:textColor="@color/black"/>
+</RelativeLayout>

@@ -1,0 +1,3 @@
+include ':leegality'
+include ':app'
+rootProject.name = "CMR_App"
