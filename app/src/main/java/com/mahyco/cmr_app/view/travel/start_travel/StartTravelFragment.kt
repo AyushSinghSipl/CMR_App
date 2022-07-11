@@ -617,7 +617,7 @@ class StartTravelFragment(
         val currentDate = sd.format(Date())
 
         val byteArrayOutputStream = ByteArrayOutputStream()
-        imageBitmap?.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+        imageBitmap?.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
         val byteArray = byteArrayOutputStream.toByteArray()
         val encoded: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
 
