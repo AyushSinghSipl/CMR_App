@@ -163,8 +163,6 @@ class AddEvenFragment() : Fragment() {
 
         registerObserver()
         checkData()
-
-
         fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(this.requireActivity())
 
@@ -380,9 +378,7 @@ class AddEvenFragment() : Fragment() {
                                         "Event Added successfully",
                                         Toast.LENGTH_SHORT
                                     ).show()*/
-
                                         CoroutineScope(Main).launch {
-
                                             if (isNetworkConnected()) {
                                                 val tourList: MutableList<Word> =
                                                     wordViewModel.allWords() as MutableList<Word>
@@ -397,7 +393,6 @@ class AddEvenFragment() : Fragment() {
                                             } else {
                                                 insert = false
                                             }
-
                                         }
                                         binding.loader.visibility = View.GONE
                                         binding.btnstUpdate.isEnabled = true
@@ -407,13 +402,10 @@ class AddEvenFragment() : Fragment() {
                                         binding.txtDescription.text.clear()
                                         binding.spEventtype.setSelection(0)
                                     }
-
                                 }
                             }
                         }
-
                     }
-
             }
         }
     }
@@ -561,13 +553,8 @@ class AddEvenFragment() : Fragment() {
             eventId.toString(),
             tourId.toString(),
             binding.txtDescription.text.toString(),
-
             currentDate, "0", "0"
-
-
         )
-
-
         //  llProgressBarStartTravel.visibility = View.GONE
 
         if (travel.uEventLat.isNotEmpty() && travel.uEventLng.isNotEmpty()&& !travel.uEventLng.equals("0.0")&& !travel.uEventLat.equals("0.0")) {
