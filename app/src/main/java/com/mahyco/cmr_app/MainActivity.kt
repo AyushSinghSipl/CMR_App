@@ -482,30 +482,10 @@ if (Constant.isNetworkConnected(this)) {
                         val intent = Intent(this, MyTravelActivity::class.java)
                         startActivityThis(intent)
                     } else {
-                        AlertDialog.Builder(this)
-                            .setMessage("Please download CRM data first")
-                            .setPositiveButton(
-                                "Download",
-                                DialogInterface.OnClickListener { dialogInterface, i ->
-                                    cmrDataViewModel?.getVehicleType()
-                                    cmrDataViewModel?.getActivityType()
-
-                                })
-                            .setNegativeButton("Cancel", null)
-                            .show();
+                        downloadData()
                     }
                 } else {
-                    AlertDialog.Builder(this)
-                        .setMessage("Please download CRM data first")
-                        .setPositiveButton(
-                            "Download",
-                            DialogInterface.OnClickListener { dialogInterface, i ->
-                                cmrDataViewModel?.getVehicleType()
-                                cmrDataViewModel?.getActivityType()
-
-                            })
-                        .setNegativeButton("Cancel", null)
-                        .show();
+                   downloadData()
                 }
             }
 
@@ -515,6 +495,25 @@ if (Constant.isNetworkConnected(this)) {
             val intent = Intent(this, GrowerIssueActivity::class.java)
             startActivityThis(intent)
         })
+    }
+
+    private fun downloadData() {
+        AlertDialog.Builder(this)
+            .setMessage("Please download CRM data first")
+            .setPositiveButton(
+                "Download",
+                DialogInterface.OnClickListener { dialogInterface, i ->
+                    if (Constant.isNetworkConnected(this)) {
+                        cmrDataViewModel?.getVehicleType()
+                        cmrDataViewModel?.getActivityType()
+                    }else{
+                        msclass?.showMessage("No internet connection found")
+                    }
+
+
+                })
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
     private fun requestLocationPermission() {

@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -19,12 +20,10 @@ import android.provider.Settings
 import android.text.TextUtils
 import android.util.Base64
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -342,7 +341,6 @@ class StartTravelFragment(
                 lifecycleScope.launch {
                     addData()
 
-
                 }
 
             }
@@ -351,38 +349,49 @@ class StartTravelFragment(
 
 
         _binding?.btnTakephoto?.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_DENIED) {
 
-            PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
-                .setOnPickResult(object : IPickResult {
-                    override fun onPickResult(r: PickResult?) {
-                        photoFile = createImageFile()
+                PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
+                    .setOnPickResult(object : IPickResult {
+                        override fun onPickResult(r: PickResult?) {
+                            photoFile = createImageFile()
 
-                        if (r?.bitmap != null) {
-                            imageBitmap = r?.bitmap
+                            if (r?.bitmap != null) {
+                                imageBitmap = r?.bitmap
 
-                            try {
-                                FileOutputStream(photoFile?.absolutePath).use { out ->
-                                    r?.bitmap.compress(
-                                        Bitmap.CompressFormat.PNG,
-                                        100,
-                                        out
-                                    ) // bmp is your Bitmap instance
+                                try {
+                                    FileOutputStream(photoFile?.absolutePath).use { out ->
+                                        r?.bitmap.compress(
+                                            Bitmap.CompressFormat.PNG,
+                                            100,
+                                            out
+                                        ) // bmp is your Bitmap instance
+                                    }
+                                } catch (e: IOException) {
+                                    e.printStackTrace()
                                 }
-                            } catch (e: IOException) {
-                                e.printStackTrace()
+
+                                binding?.ivImage?.setImageBitmap(r?.bitmap)
+                                _binding?.ivImage?.visibility = View.VISIBLE
+
                             }
-
-                            binding?.ivImage?.setImageBitmap(r?.bitmap)
-                            _binding?.ivImage?.visibility = View.VISIBLE
-
                         }
-                    }
-                })
-                .setOnPickCancel(object : IPickCancel {
-                    override fun onCancelClick() {
-                        //TODO: do what you have to if user clicked cancel
-                    }
-                }).show(this.childFragmentManager)
+                    })
+                    .setOnPickCancel(object : IPickCancel {
+                        override fun onCancelClick() {
+                            //TODO: do what you have to if user clicked cancel
+                        }
+                    }).show(this.childFragmentManager)
+            }else{
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                    ),
+                    MY_CAMERA_PERMISSION_CODE
+                )
+
+            }
 
         }
         intialbinddata()
@@ -661,12 +670,18 @@ class StartTravelFragment(
         if (travel.uStartLat.isNotEmpty() && travel.uStartLng.isNotEmpty() &&!travel.uStartLat.equals("0.0")&& !travel.uStartLng.equals("0.0"))  {
             val inserted = wordViewModel.insert(travel).isCompleted
         } else {
-            msclass?.showMessage("Unable to access location")
+
             val gpsTracker = GPSTracker(context)
             if (gpsTracker.getIsGPSTrackingEnabled())
             {
              latitude =   gpsTracker.latitude.toString()
                 longitude = gpsTracker.longitude.toString()
+
+                if (latitude.equals("")||longitude.equals("")){
+                    msclass?.showMessage("Unable to access location")
+                }else{
+                    addData()
+                }
 
                 llProgressBarStartTravel.visibility = View.GONE
             }
@@ -706,26 +721,58 @@ class StartTravelFragment(
                             // Error occurred while creating the File
                             msclass?.showMessage(ex.message.toString())
                         }*/
-                        val setup: PickSetup = PickSetup()
-                            .setFlip(true)
-                            .setPickTypes(EPickType.CAMERA)
-                            .setIconGravity(Gravity.LEFT)
-                            .setButtonOrientation(LinearLayout.VERTICAL)
-                            .setSystemDialog(false)
-                        PickImageDialog.build(setup)
+                        PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
                             .setOnPickResult(object : IPickResult {
                                 override fun onPickResult(r: PickResult?) {
-                                    //TODO: do what you have to...
+                                    photoFile = createImageFile()
+
+                                    if (r?.bitmap != null) {
+                                        imageBitmap = r?.bitmap
+
+                                        try {
+                                            FileOutputStream(photoFile?.absolutePath).use { out ->
+                                                r?.bitmap.compress(
+                                                    Bitmap.CompressFormat.PNG,
+                                                    100,
+                                                    out
+                                                ) // bmp is your Bitmap instance
+                                            }
+                                        } catch (e: IOException) {
+                                            e.printStackTrace()
+                                        }
+
+                                        binding?.ivImage?.setImageBitmap(r?.bitmap)
+                                        _binding?.ivImage?.visibility = View.VISIBLE
+
+                                    }
                                 }
                             })
                             .setOnPickCancel(object : IPickCancel {
                                 override fun onCancelClick() {
                                     //TODO: do what you have to if user clicked cancel
                                 }
-                            }).show(fragmentManager)
+                            }).show(this.childFragmentManager)
                     }
                 } else {
-                    Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show()
+
+                    val builder = AlertDialog.Builder(context)
+                    builder.setMessage("You need to allow Camera permission to perform further operations")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Allow"
+                        ) { dialog, id ->
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri: Uri =
+                                Uri.fromParts("package", requireContext().getPackageName(), null)
+                            intent.data = uri
+                            startActivity(intent)
+                        }
+                        .setNegativeButton(
+                            "Deny"
+                        ) { dialog, id ->  }
+                    val alert = builder.create()
+                    alert.show()
+//                    Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show()
                 }
             }
             MY_PERMISSIONS_REQUEST_LOCATION -> {

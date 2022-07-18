@@ -76,6 +76,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.lang.reflect.Type
 import java.text.DecimalFormat
@@ -489,21 +490,50 @@ class AddEvenFragment() : Fragment() {
         }
 
         _binding?.btnTakephoto?.setOnClickListener {
-            PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
-                .setOnPickResult(object : IPickResult {
-                    override fun onPickResult(r: PickResult?) {
-                        if (r?.bitmap != null) {
-                            imageBitmap = r?.bitmap
-                            binding?.ivImage?.setImageBitmap(r?.bitmap)
-                            _binding?.ivImage?.visibility = View.VISIBLE
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_DENIED) {
+
+                PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
+                    .setOnPickResult(object : IPickResult {
+                        override fun onPickResult(r: PickResult?) {
+                            photoFile = createImageFile()
+
+                            if (r?.bitmap != null) {
+                                imageBitmap = r?.bitmap
+
+                                try {
+                                    FileOutputStream(photoFile?.absolutePath).use { out ->
+                                        r?.bitmap.compress(
+                                            Bitmap.CompressFormat.PNG,
+                                            100,
+                                            out
+                                        ) // bmp is your Bitmap instance
+                                    }
+                                } catch (e: IOException) {
+                                    e.printStackTrace()
+                                }
+
+                                binding?.ivImage?.setImageBitmap(r?.bitmap)
+                                _binding?.ivImage?.visibility = View.VISIBLE
+
+                            }
                         }
-                    }
-                })
-                .setOnPickCancel(object : IPickCancel {
-                    override fun onCancelClick() {
-                        //TODO: do what you have to if user clicked cancel
-                    }
-                }).show(this.childFragmentManager)
+                    })
+                    .setOnPickCancel(object : IPickCancel {
+                        override fun onCancelClick() {
+                            //TODO: do what you have to if user clicked cancel
+                        }
+                    }).show(this.childFragmentManager)
+            }else{
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                    ),
+                    MY_CAMERA_PERMISSION_CODE
+                )
+
+            }
+
         }
         intialbinddata()
     }
@@ -560,13 +590,19 @@ class AddEvenFragment() : Fragment() {
         if (travel.uEventLat.isNotEmpty() && travel.uEventLng.isNotEmpty()&& !travel.uEventLng.equals("0.0")&& !travel.uEventLat.equals("0.0")) {
             val inserted = wordViewModel.insert(travel).isCompleted
         } else {
-            msclass?.showMessage("Unable to access location")
             val gpsTracker = GPSTracker(context)
             if (gpsTracker.getIsGPSTrackingEnabled())
             {
                 latitude =   gpsTracker.latitude.toString()
                 longitude = gpsTracker.longitude.toString()
 
+                if (latitude.equals("")||longitude.equals("")){
+                    msclass?.showMessage("Unable to access location")
+                }else{
+                    addData()
+                }
+
+                llProgressBarStartTravel.visibility = View.GONE
             }
         }
 
@@ -740,6 +776,81 @@ class AddEvenFragment() : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
+            MY_CAMERA_PERMISSION_CODE -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    if (takePictureIntent.resolveActivity(activity?.packageManager!!) != null) {
+                        // Create the File where the photo should go
+                        /*try {
+                            photoFile = createImageFile()
+                            // Continue only if the File was successfully created
+                            if (photoFile != null) {
+                                val photoURI = FileProvider.getUriForFile(
+                                    context!!,
+                                    "com.mahyco.cmr_app.provider",
+                                    photoFile!!
+                                )
+                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                                startActivityForResult(takePictureIntent, CAPTURE_IMAGE_REQUEST)
+                            }
+                        } catch (ex: Exception) {
+                            // Error occurred while creating the File
+                            msclass?.showMessage(ex.message.toString())
+                        }*/
+                        PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
+                            .setOnPickResult(object : IPickResult {
+                                override fun onPickResult(r: PickResult?) {
+                                    photoFile = createImageFile()
+
+                                    if (r?.bitmap != null) {
+                                        imageBitmap = r?.bitmap
+
+                                        try {
+                                            FileOutputStream(photoFile?.absolutePath).use { out ->
+                                                r?.bitmap.compress(
+                                                    Bitmap.CompressFormat.PNG,
+                                                    100,
+                                                    out
+                                                ) // bmp is your Bitmap instance
+                                            }
+                                        } catch (e: IOException) {
+                                            e.printStackTrace()
+                                        }
+
+                                        binding?.ivImage?.setImageBitmap(r?.bitmap)
+                                        _binding?.ivImage?.visibility = View.VISIBLE
+
+                                    }
+                                }
+                            })
+                            .setOnPickCancel(object : IPickCancel {
+                                override fun onCancelClick() {
+                                    //TODO: do what you have to if user clicked cancel
+                                }
+                            }).show(this.childFragmentManager)
+                    }
+                } else {
+
+                    val builder = AlertDialog.Builder(context)
+                    builder.setMessage("You need to allow Camera permission to perform further operations")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Allow"
+                        ) { dialog, id ->
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri: Uri =
+                                Uri.fromParts("package", requireContext().getPackageName(), null)
+                            intent.data = uri
+                            startActivity(intent)
+                        }
+                        .setNegativeButton(
+                            "Deny"
+                        ) { dialog, id ->  }
+                    val alert = builder.create()
+                    alert.show()
+//                    Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show()
+                }
+            }
             MY_PERMISSIONS_REQUEST_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
