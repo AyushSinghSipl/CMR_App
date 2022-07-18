@@ -369,9 +369,12 @@ try {
         }
 
         downloadCrmData.setOnClickListener {
-
-            cmrDataViewModel?.getVehicleType()
-            cmrDataViewModel?.getActivityType()
+if (Constant.isNetworkConnected(this)) {
+    cmrDataViewModel?.getVehicleType()
+    cmrDataViewModel?.getActivityType()
+}else{
+    msclass?.showMessage("No internet connection found")
+}
         }
 
         cd_digital_contract.setOnClickListener(View.OnClickListener {
