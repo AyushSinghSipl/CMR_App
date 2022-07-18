@@ -1,9 +1,12 @@
 package com.mahyco.cmr_app.core
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.appcompat.app.AppCompatActivity
 
 class Constant {
 
@@ -59,6 +62,13 @@ class Constant {
             } else {
                 Settings.System.getInt(c.contentResolver, Settings.System.AUTO_TIME, 0) == 1
             }
+        }
+
+        @SuppressLint("ServiceCast")
+         fun isNetworkConnected(c: Context): Boolean {
+            val cm: ConnectivityManager =
+                c?.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
+            return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo()!!.isConnected()
         }
     }
 }
