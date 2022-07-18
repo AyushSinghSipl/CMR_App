@@ -291,13 +291,14 @@ class StartTravelFragment(
         val sd = SimpleDateFormat("MM/dd/yyyy")
         val currentDate = sd.format(Date())
         binding.btnstUpdate.setOnClickListener {
-            llProgressBarStartTravel.visibility = View.VISIBLE
+
             wordViewModel.getCurrentDateTravelType(currentDate, "start")
                 .observe(owner = viewLifecycleOwner) { words ->
                     // Update the cached copy of the words in the adapter.
                     words.let {
                         Log.e("start", "onCreateView: " + it.size)
                     }
+
                     if (words != null && words.size != 0) {
                         if (isVisibleTo_User) {
                             for (item in words) {
