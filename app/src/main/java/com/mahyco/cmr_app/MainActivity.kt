@@ -99,15 +99,13 @@ class MainActivity : BaseActivity() {
             val pInfo: PackageInfo =
                 packageManager.getPackageInfo(packageName, 0)
             val version: String = pInfo.versionName
-            textViewVersionName.text = "version : "+version
+            textViewVersionName.text = "version : " + version
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
 
 
-
     }
-
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -141,7 +139,6 @@ class MainActivity : BaseActivity() {
         Log.e("IMEI", "onCreate: " + IMEINumber)
         //  return IMEINumber
     }
-
 
 
     private fun registerObserver() {
@@ -186,10 +183,8 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         uploaded = true
-    //    checkNewAppVersionState()
+        //    checkNewAppVersionState()
     }
-
-
 
 
     override fun onDestroy() {
@@ -280,42 +275,43 @@ class MainActivity : BaseActivity() {
      * However, you should execute this check at all app entry points.
      */
 
-        private fun checkNewAppVersionState() {
-try {
+    private fun checkNewAppVersionState() {
+        try {
 
-    AsyncTask.execute(Runnable {
-        val newVersion =
-            Jsoup.connect("https://play.google.com/store/apps/details?id=com.mahyco.cmr_app&hl=it")
-                .timeout(30000)
-                .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-                .referrer("http://www.google.com")
-                .get()
-                .select(".hAyfc .htlgb")
-                .get(7)
-                .ownText();
-        Toast.makeText(this@MainActivity, newVersion.toString(), Toast.LENGTH_SHORT).show()    })
-}catch (e:Exception){
-    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
-}
+            AsyncTask.execute(Runnable {
+                val newVersion =
+                    Jsoup.connect("https://play.google.com/store/apps/details?id=com.mahyco.cmr_app&hl=it")
+                        .timeout(30000)
+                        .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+                        .referrer("http://www.google.com")
+                        .get()
+                        .select(".hAyfc .htlgb")
+                        .get(7)
+                        .ownText();
+                Toast.makeText(this@MainActivity, newVersion.toString(), Toast.LENGTH_SHORT).show()
+            })
+        } catch (e: Exception) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
+        }
 
-       /* appUpdateManager
-            ?.getAppUpdateInfo()
-            ?.addOnSuccessListener { appUpdateInfo: AppUpdateInfo ->
-                //FLEXIBLE:
-                // If the update is downloaded but not installed,
-                // notify the user to complete the update.
-                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
-                    popupSnackbarForCompleteUpdateAndUnregister()
-                }
+        /* appUpdateManager
+             ?.getAppUpdateInfo()
+             ?.addOnSuccessListener { appUpdateInfo: AppUpdateInfo ->
+                 //FLEXIBLE:
+                 // If the update is downloaded but not installed,
+                 // notify the user to complete the update.
+                 if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                     popupSnackbarForCompleteUpdateAndUnregister()
+                 }
 
-                //IMMEDIATE:
-                if (appUpdateInfo.updateAvailability()
-                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                ) {
-                    // If an in-app update is already running, resume the update.
-                    startAppUpdateImmediate(appUpdateInfo)
-                }
-            }*/
+                 //IMMEDIATE:
+                 if (appUpdateInfo.updateAvailability()
+                     == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                 ) {
+                     // If an in-app update is already running, resume the update.
+                     startAppUpdateImmediate(appUpdateInfo)
+                 }
+             }*/
     }
 
 
@@ -369,12 +365,12 @@ try {
         }
 
         downloadCrmData.setOnClickListener {
-if (Constant.isNetworkConnected(this)) {
-    cmrDataViewModel?.getVehicleType()
-    cmrDataViewModel?.getActivityType()
-}else{
-    msclass?.showMessage("No internet connection found")
-}
+            if (Constant.isNetworkConnected(this)) {
+                cmrDataViewModel?.getVehicleType()
+                cmrDataViewModel?.getActivityType()
+            } else {
+                msclass?.showMessage("No internet connection found")
+            }
         }
 
         cd_digital_contract.setOnClickListener(View.OnClickListener {
@@ -438,8 +434,8 @@ if (Constant.isNetworkConnected(this)) {
         })
 
         cd_cmr_my_travel_report.setOnClickListener(View.OnClickListener {
-           /* val intent = Intent(this, UploadSyncActivity::class.java)
-            startActivityThis(intent)*/
+            /* val intent = Intent(this, UploadSyncActivity::class.java)
+             startActivityThis(intent)*/
 
             Toast.makeText(this, "Under development", Toast.LENGTH_SHORT).show()
         })
@@ -485,7 +481,7 @@ if (Constant.isNetworkConnected(this)) {
                         downloadData()
                     }
                 } else {
-                   downloadData()
+                    downloadData()
                 }
             }
 
@@ -506,7 +502,7 @@ if (Constant.isNetworkConnected(this)) {
                     if (Constant.isNetworkConnected(this)) {
                         cmrDataViewModel?.getVehicleType()
                         cmrDataViewModel?.getActivityType()
-                    }else{
+                    } else {
                         msclass?.showMessage("No internet connection found")
                     }
 
@@ -651,7 +647,10 @@ if (Constant.isNetworkConnected(this)) {
                         for (item in tourList) {
 
                             if (item.uStatus != "1") {
-                                Log.e("add_event", "onOptionsItemSelected: "+item.uId+" - status: "+  item.uStatus )
+                                Log.e(
+                                    "add_event",
+                                    "onOptionsItemSelected: " + item.uId + " - status: " + item.uStatus
+                                )
                                 uploaded = false
                                 msclass?.showMessage("Please end tour and upload data before logout !")
                                 break

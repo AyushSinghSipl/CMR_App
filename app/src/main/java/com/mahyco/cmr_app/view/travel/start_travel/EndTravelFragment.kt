@@ -95,9 +95,10 @@ class EndTravelFragment() : Fragment() {
     private val MY_CAMERA_PERMISSION_CODE = 100
     var photoFile: File? = null
     var mCurrentPhotoPath: String = ""
-   /* private val wordViewModel: WordViewModel by viewModels {
-        WordViewModelFactory((activity?.application as MainApplication).repository)
-    }*/
+
+    /* private val wordViewModel: WordViewModel by viewModels {
+         WordViewModelFactory((activity?.application as MainApplication).repository)
+     }*/
     var travelList: Word? = null
     var tourEnded = false
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -109,9 +110,9 @@ class EndTravelFragment() : Fragment() {
     var imageHashCode = ""
     var imageBitmap: Bitmap? = null
     var longitude = ""
-    private var is_visible= false
+    private var is_visible = false
 
-    open fun EndTravelFragment(){}
+    open fun EndTravelFragment() {}
 
     private lateinit var wordViewModel: WordViewModel
     lateinit var cmrDataViewModel: CMRDataViewModel
@@ -138,32 +139,32 @@ class EndTravelFragment() : Fragment() {
         val root: View = binding.root
         msclass = Messageclass(this.activity)
 
-      checkData()
+        checkData()
         registerObserver()
 
 
 
         fusedLocationClient =
             LocationServices.getFusedLocationProviderClient(this.requireActivity())
-        if(!isLocationEnabled(requireContext())) {
+        if (!isLocationEnabled(requireContext())) {
             // notify user
 
             AlertDialog.Builder(context)
                 .setMessage("PLease enable your location from setting")
-                .setPositiveButton("Enable",  DialogInterface.OnClickListener { dialogInterface, i ->
+                .setPositiveButton("Enable", DialogInterface.OnClickListener { dialogInterface, i ->
                     context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 
                 })
-                .setNegativeButton("Cancel",null)
+                .setNegativeButton("Cancel", null)
                 .show();
-        }else{
+        } else {
             setListner()
 
         }
 
         val sharedPreference: SharedPreference = SharedPreference(requireContext())
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_NAME)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
 
         binding.lblwelcome.text = decryptedUserCode
 
@@ -252,14 +253,14 @@ class EndTravelFragment() : Fragment() {
 
 
                 // Showing Alert Message
-                if (alertDialog.isShowing){
+                if (alertDialog.isShowing) {
                     alertDialog.dismiss()
                 }
                 alertDialog.show()
             } else {
                 if (!it.errorMessage.toString().equals("null")) {
                     msclass?.showMessage(it.errorMessage.toString())
-                }else{
+                } else {
                     msclass?.showMessage("Something went wrong")
                 }
             }
@@ -268,6 +269,7 @@ class EndTravelFragment() : Fragment() {
 
 
     }
+
     fun isLocationEnabled(context: Context): Boolean {
         var locationMode = 0
         val locationProviders: String
@@ -288,6 +290,7 @@ class EndTravelFragment() : Fragment() {
             !TextUtils.isEmpty(locationProviders)
         }
     }
+
     private fun checkData() {
         val sd = SimpleDateFormat("MM/dd/yyyy")
         val currentDate = sd.format(Date())
@@ -315,7 +318,7 @@ class EndTravelFragment() : Fragment() {
                                 }
                             }
                             binding.btnstUpdate.isEnabled = false
-                           // binding.btnstUpdate.visibility = View.GONE
+                            // binding.btnstUpdate.visibility = View.GONE
                         } else {
                             binding.btnstUpdate.isEnabled = true
                             binding.btnstUpdate.visibility = View.VISIBLE
@@ -346,7 +349,7 @@ class EndTravelFragment() : Fragment() {
 
                                             }
                                         } catch (e: Exception) {
-                                            Log.e("Internet error", "checkData: ",)
+                                            Log.e("Internet error", "checkData: ")
                                         }
 
                                     } else {
@@ -383,7 +386,7 @@ class EndTravelFragment() : Fragment() {
                                 "Tour cycle is ended for today please comeback next day"
                             )*/
                                 binding.btnstUpdate.isEnabled = false
-                               // binding.btnstUpdate.visibility = View.GONE
+                                // binding.btnstUpdate.visibility = View.GONE
                                 return@observe
                             }
                         }
@@ -406,7 +409,7 @@ class EndTravelFragment() : Fragment() {
         if (isVisibleToUser) {
             is_visible = true
             checkData()
-        }else{
+        } else {
             is_visible = false
         }
 
@@ -468,22 +471,22 @@ class EndTravelFragment() : Fragment() {
                                 latitude = df.format(location.latitude).toDouble().toString()
                                 longitude = df.format(location.longitude).toDouble().toString()
 
-                             /*   val geocoder = Geocoder(this.requireContext(), Locale.getDefault())
-                                val addresses: List<Address> =
-                                    geocoder.getFromLocation(
-                                        latitude.toDouble(),
-                                        longitude.toDouble(),
-                                        1
-                                    )
-                                val cityName: String = addresses[0].locality
-                                address = cityName
-                                binding.txtlocation.setText(cityName)*/
+                                /*   val geocoder = Geocoder(this.requireContext(), Locale.getDefault())
+                                   val addresses: List<Address> =
+                                       geocoder.getFromLocation(
+                                           latitude.toDouble(),
+                                           longitude.toDouble(),
+                                           1
+                                       )
+                                   val cityName: String = addresses[0].locality
+                                   address = cityName
+                                   binding.txtlocation.setText(cityName)*/
                             }
                         }
                 }
             }
-        }catch (e:Exception){
-            Log.e("error", "checkBackgroundLocation: "+e.message )
+        } catch (e: Exception) {
+            Log.e("error", "checkBackgroundLocation: " + e.message)
         }
     }
 
@@ -512,7 +515,7 @@ class EndTravelFragment() : Fragment() {
             return false
         }
 
-        if (!Constant.isTimeAutomatic(requireContext())){
+        if (!Constant.isTimeAutomatic(requireContext())) {
             msclass?.showAutomaticTimeMessage("Please update time setting to automatic")
             return false
         }
@@ -520,6 +523,7 @@ class EndTravelFragment() : Fragment() {
         return true
 
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -596,7 +600,7 @@ class EndTravelFragment() : Fragment() {
                         }
                         .setNegativeButton(
                             "Deny"
-                        ) { dialog, id ->  }
+                        ) { dialog, id -> }
                     val alert = builder.create()
                     alert.show()
 //                    Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show()
@@ -660,9 +664,9 @@ class EndTravelFragment() : Fragment() {
 
     private fun setListner() {
 
-        if (imageBitmap == null){
+        if (imageBitmap == null) {
             binding.ivImage.visibility == View.GONE
-        }else{
+        } else {
             binding.ivImage.visibility == View.VISIBLE
             binding?.ivImage?.setImageBitmap(imageBitmap)
         }
@@ -679,8 +683,8 @@ class EndTravelFragment() : Fragment() {
                     alertDialogEnd.setTitle("Crop Monitor Report")
                     alertDialogEnd.setMessage("Tour is ended for today")
                     alertDialogEnd.setButton("OK") { dialog, which ->
-                     /*   activity?.finish()
-                        startActivity(activity?.getIntent())*/
+                        /*   activity?.finish()
+                           startActivity(activity?.getIntent())*/
                     }
                     if (!alertDialogEnd.isShowing) {
                         alertDialogEnd.show()
@@ -701,20 +705,21 @@ class EndTravelFragment() : Fragment() {
             }
 
 
-          /*  wordViewModel.getCurrentDateTravelType(currentDate, "end")
-                .observe(owner = this) { words ->
-                    // Update the cached copy of the words in the adapter.
+            /*  wordViewModel.getCurrentDateTravelType(currentDate, "end")
+                  .observe(owner = this) { words ->
+                      // Update the cached copy of the words in the adapter.
 
 
 
-                }*/
+                  }*/
 
         }
 
 
         _binding?.btnTakephoto?.setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_DENIED) {
+                != PackageManager.PERMISSION_DENIED
+            ) {
 
                 PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
                     .setOnPickResult(object : IPickResult {
@@ -747,7 +752,7 @@ class EndTravelFragment() : Fragment() {
                             //TODO: do what you have to if user clicked cancel
                         }
                     }).show(this.childFragmentManager)
-            }else{
+            } else {
                 requestPermissions(
                     arrayOf(
                         Manifest.permission.CAMERA,
@@ -791,7 +796,7 @@ class EndTravelFragment() : Fragment() {
             longitude,
             "",
             "",
-          travelList?.uKmReadingStart.toString(),
+            travelList?.uKmReadingStart.toString(),
             travelList?.uKmImageStart.toString(),
             binding.txtkm.text.toString(),
             encoded,
@@ -802,22 +807,24 @@ class EndTravelFragment() : Fragment() {
             "0",
             "0",
             "",
-            currentDate,"0","0"
+            currentDate, "0", "0"
 
         )
 
-        if (travel.uEndLat.isNotEmpty()&&travel.uEndLng.isNotEmpty() && !travel.uEndLat.equals("0.0")&& !travel.uEndLng.equals("0.0")) {
+        if (travel.uEndLat.isNotEmpty() && travel.uEndLng.isNotEmpty() && !travel.uEndLat.equals("0.0") && !travel.uEndLng.equals(
+                "0.0"
+            )
+        ) {
             wordViewModel.insert(travel)
-        }else{
+        } else {
             val gpsTracker = GPSTracker(context)
-            if (gpsTracker.getIsGPSTrackingEnabled())
-            {
-                latitude =   gpsTracker.latitude.toString()
+            if (gpsTracker.getIsGPSTrackingEnabled()) {
+                latitude = gpsTracker.latitude.toString()
                 longitude = gpsTracker.longitude.toString()
 
-                if (latitude.equals("")||longitude.equals("")){
+                if (latitude.equals("") || longitude.equals("")) {
                     msclass?.showMessage("Unable to access location")
-                }else{
+                } else {
                     addData()
                 }
 
@@ -825,7 +832,6 @@ class EndTravelFragment() : Fragment() {
             }
         }
         binding.llProgressBarEndTravel.visibility = View.GONE
-
 
 
     }
@@ -852,13 +858,14 @@ class EndTravelFragment() : Fragment() {
 
             if (bitmap != null) {
                 imageBitmap = bitmap
-                binding?.ivImage?.setImageBitmap(bitmap )
+                binding?.ivImage?.setImageBitmap(bitmap)
                 _binding?.ivImage?.visibility = View.VISIBLE
             }
         } else {
             msclass!!.showMessage("Request cancelled or something went wrong.")
         }
     }
+
     private fun myBitmap(bitmap: Bitmap?): Bitmap {
 
 
@@ -892,7 +899,7 @@ class EndTravelFragment() : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (isLocationEnabled(context!!)){
+        if (isLocationEnabled(context!!)) {
             setListner()
             checkLocationPermission()
         }

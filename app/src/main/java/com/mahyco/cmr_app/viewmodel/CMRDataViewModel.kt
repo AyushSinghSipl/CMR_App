@@ -54,7 +54,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
     fun getVehicleType(
 
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         loadingLiveData.value = true
@@ -69,10 +69,10 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
                 if (response != null /*&& response.message!=null*/) {
 //                    if (response.getVehicleTypeResponse != null) {
-                        getVehicleTypeData.value = response
-                        val gson = Gson()
-                        val json = gson.toJson(response)
-                        sharedPreference.save(Constant.VEHICLE_LIST,json)
+                    getVehicleTypeData.value = response
+                    val gson = Gson()
+                    val json = gson.toJson(response)
+                    sharedPreference.save(Constant.VEHICLE_LIST, json)
 //                    } else {
 ////                        errorLiveData.value = response.message
 //                    }
@@ -87,7 +87,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
     fun getActivityType(
 
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         loadingLiveData.value = true
@@ -102,10 +102,10 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
                 if (response != null /*&& response.message!=null*/) {
 //                    if (response.getVehicleTypeResponse != null) {
-                        getActivityTypeData.value = response
-                        val gson = Gson()
-                        val json = gson.toJson(response)
-                        sharedPreference.save(Constant.ACTIVITY_LIST,json)
+                    getActivityTypeData.value = response
+                    val gson = Gson()
+                    val json = gson.toJson(response)
+                    sharedPreference.save(Constant.ACTIVITY_LIST, json)
 //                    } else {
 ////                        errorLiveData.value = response.message
 //                    }
@@ -119,18 +119,18 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
     }
 
 
- fun getCMRDataForValAPI(
+    fun getCMRDataForValAPI(
         cntr_code: String,
         prd_year: String,
         staff_code: String,
         postatus: String,
         filename: String,
         userCode: String
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
 
@@ -144,7 +144,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         jsonParam.addProperty("userCode", userCode)
         jsonParam.addProperty("cntr_code", cntr_code)
         jsonParam.addProperty("prd_year", prd_year)
-        jsonParam.addProperty("staff_code",staff_code)
+        jsonParam.addProperty("staff_code", staff_code)
         jsonParam.addProperty("postatus", postatus)
         jsonParam.addProperty("filename", filename)
 
@@ -163,7 +163,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
             .subscribe { response ->
                 loadingLiveData.value = false
 
-                if (response != null && response.message!=null) {
+                if (response != null && response.message != null) {
                     if (response.success!!) {
                         cmrDataMutableLiveData.value = response
                     } else {
@@ -180,18 +180,18 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
     fun postTourEventDataAPI(
         eventList: MutableList<Word>
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
         val emp_id = sharedPreference.getValueString(Constant.EMP_ID)
 
-        var listTourEvent: MutableList<TourEventParamItem> =  ArrayList()
+        var listTourEvent: MutableList<TourEventParamItem> = ArrayList()
 
-        for (item in eventList){
+        for (item in eventList) {
             if (item.uStatus == "0") {
                 val startlatlng = item.uStartLat + "," + item.uStartLng
                 val endlatlng = item.uEndLat + "," + item.uEndLng
@@ -216,7 +216,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
                     item.uEventId.toInt(),
                     item.uEventDescription,
                     item.uType,
-                    endlatlng,"0","0"
+                    endlatlng, "0", "0"
                 )
                 listTourEvent.add(tourEventParamItem)
             }
@@ -240,37 +240,37 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
                     if (response != null) {
 //                        postTourEventsdata.value = response
-                          if (response.status.equals("Success",true)) {
-                              postTourEventsdata.value = response
+                        if (response.status.equals("Success", true)) {
+                            postTourEventsdata.value = response
 
-                    } else {
-                        errorLiveData.value = response.errorMessage.toString()
-                    }
+                        } else {
+                            errorLiveData.value = response.errorMessage.toString()
+                        }
                     } else {
                         errorLiveData.value = mContext.resources.getString(R.string.server_error)
                     }
                 }
 
             disposable.add(dispose)
-        }else{
+        } else {
             loadingLiveData.value = false
         }
     }
 
     fun realtimetourdata(
         eventList: MutableList<Word>
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
         val emp_id = sharedPreference.getValueString(Constant.EMP_ID)
 
-        var listTourEvent: MutableList<TourEventParamItem> =  ArrayList()
+        var listTourEvent: MutableList<TourEventParamItem> = ArrayList()
 
-        for (item in eventList){
+        for (item in eventList) {
             if (item.uStatus == "0") {
                 val startlatlng = item.uStartLat + "," + item.uStartLng
                 val endlatlng = item.uEndLat + "," + item.uEndLng
@@ -295,7 +295,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
                     item.uEventId.toInt(),
                     item.uEventDescription,
                     item.uType,
-                    endlatlng,"0","0"
+                    endlatlng, "0", "0"
                 )
                 listTourEvent.add(tourEventParamItem)
             }
@@ -329,7 +329,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
                 }
 
             disposable.add(dispose)
-        }else{
+        } else {
             loadingLiveData.value = false
         }
     }
@@ -341,11 +341,11 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         postatus: String,
         filename: String,
         userCode: String
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
 
@@ -359,7 +359,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         jsonParam.addProperty("userCode", userCode)
         jsonParam.addProperty("cntr_code", cntr_code)
         jsonParam.addProperty("prd_year", prd_year)
-        jsonParam.addProperty("staff_code",staff_code)
+        jsonParam.addProperty("staff_code", staff_code)
         jsonParam.addProperty("postatus", postatus)
         jsonParam.addProperty("filename", filename)
 
@@ -378,7 +378,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
             .subscribe { response ->
                 loadingLiveData.value = false
 
-                if (response != null && response.message!=null) {
+                if (response != null && response.message != null) {
                     if (response.success!!) {
                         cmrDataMLDGetCMRTenData.value = response
                     } else {
@@ -400,11 +400,11 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         postatus: String,
         filename: String,
         userCode: String
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
 
@@ -418,7 +418,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         jsonParam.addProperty("userCode", userCode)
         jsonParam.addProperty("cntr_code", cntr_code)
         jsonParam.addProperty("prd_year", prd_year)
-        jsonParam.addProperty("staff_code",staff_code)
+        jsonParam.addProperty("staff_code", staff_code)
         jsonParam.addProperty("postatus", postatus)
         jsonParam.addProperty("filename", filename)
 
@@ -437,7 +437,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
             .subscribe { response ->
                 loadingLiveData.value = false
 
-                if (response != null && response.message!=null) {
+                if (response != null && response.message != null) {
                     if (response.success!!) {
                         cmrDataMLDGetCMRTwentyData.value = response
                     } else {
@@ -459,11 +459,11 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         postatus: String,
         filename: String,
         userCode: String
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
 
@@ -477,7 +477,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         jsonParam.addProperty("userCode", userCode)
         jsonParam.addProperty("cntr_code", cntr_code)
         jsonParam.addProperty("prd_year", prd_year)
-        jsonParam.addProperty("staff_code",staff_code)
+        jsonParam.addProperty("staff_code", staff_code)
         jsonParam.addProperty("postatus", postatus)
         jsonParam.addProperty("filename", filename)
 
@@ -496,7 +496,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
             .subscribe { response ->
                 loadingLiveData.value = false
 
-                if (response != null && response.message!=null) {
+                if (response != null && response.message != null) {
                     if (response.success!!) {
                         cmrDataMLDGetCMRThirtyData.value = response
                     } else {
@@ -518,11 +518,11 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         postatus: String,
         filename: String,
         userCode: String
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
 
@@ -536,7 +536,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         jsonParam.addProperty("userCode", userCode)
         jsonParam.addProperty("cntr_code", cntr_code)
         jsonParam.addProperty("prd_year", prd_year)
-        jsonParam.addProperty("staff_code",staff_code)
+        jsonParam.addProperty("staff_code", staff_code)
         jsonParam.addProperty("postatus", postatus)
         jsonParam.addProperty("filename", filename)
 
@@ -555,7 +555,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
             .subscribe { response ->
                 loadingLiveData.value = false
 
-                if (response != null && response.message!=null) {
+                if (response != null && response.message != null) {
                     if (response.success!!) {
                         cmrDataMLDGetCMRFortyData.value = response
                     } else {
@@ -578,11 +578,11 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         postatus: String,
         filename: String,
         userCode: String
-    ){
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
 
@@ -596,7 +596,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         jsonParam.addProperty("userCode", userCode)
         jsonParam.addProperty("cntr_code", cntr_code)
         jsonParam.addProperty("prd_year", prd_year)
-        jsonParam.addProperty("staff_code",staff_code)
+        jsonParam.addProperty("staff_code", staff_code)
         jsonParam.addProperty("postatus", postatus)
         jsonParam.addProperty("filename", filename)
 
@@ -615,7 +615,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
             .subscribe { response ->
                 loadingLiveData.value = false
 
-                if (response != null && response.message!=null) {
+                if (response != null && response.message != null) {
                     if (response.success!!) {
                         cmrDataMLDGetCMRFortyData.value = response
                     } else {
@@ -638,13 +638,13 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         postatus: String,
         filename: String,
         userCode: String,
-        prdCode : String,
-        TFACode : String
-    ){
+        prdCode: String,
+        TFACode: String
+    ) {
 
         val sharedPreference: SharedPreference = SharedPreference(mContext)
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val accessToken = sharedPreference.getValueString(Constant.USER_TOKEN)
         val finalMessage = sharedPreference.getValueString(Constant.FINAL_MESSAGE)
 
@@ -659,7 +659,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         jsonParam.addProperty("cntr_code", cntr_code)
         jsonParam.addProperty("prd_year", prd_year)
         jsonParam.addProperty("prd_code", prdCode)
-        jsonParam.addProperty("staff_code",staff_code)
+        jsonParam.addProperty("staff_code", staff_code)
         jsonParam.addProperty("TFA_code", TFACode)
         jsonParam.addProperty("postatus", postatus)
         jsonParam.addProperty("filename", filename)
@@ -679,7 +679,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
             .subscribe { response ->
                 loadingLiveData.value = false
 
-                if (response != null && response.message!=null) {
+                if (response != null && response.message != null) {
                     if (response.success!!) {
                         cmrMLMoStaffWiserGrowerReport.value = response
                     } else {

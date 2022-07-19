@@ -100,8 +100,6 @@ class StartTravelFragment(
     public fun StartTravelFragment() {}
 
 
-
-
     private val CAPTURE_IMAGE_REQUEST = 1888
     private val MY_CAMERA_PERMISSION_CODE = 100
 
@@ -124,7 +122,6 @@ class StartTravelFragment(
     var network_enabled = false;
 
 
-
     private lateinit var wordViewModel: WordViewModel
     lateinit var cmrDataViewModel: CMRDataViewModel
 
@@ -136,19 +133,20 @@ class StartTravelFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-           // wordViewModel = it.getString(ARG_PARAM1)
-          //  cmrDataViewModel = it.getString(ARG_PARAM2)
+            // wordViewModel = it.getString(ARG_PARAM1)
+            //  cmrDataViewModel = it.getString(ARG_PARAM2)
         }
 
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        wordViewModel= WordViewModel(
+        wordViewModel = WordViewModel(
             (requireActivity()?.application as MainApplication).repository,
             requireActivity()?.application as MainApplication
         )
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -158,9 +156,9 @@ class StartTravelFragment(
 
         msclass = Messageclass(this.activity)
 
-      /*  cmrDataViewModel =
-            ViewModelProviders.of(this)
-                .get<CMRDataViewModel>(CMRDataViewModel::class.java)*/
+        /*  cmrDataViewModel =
+              ViewModelProviders.of(this)
+                  .get<CMRDataViewModel>(CMRDataViewModel::class.java)*/
         registerObserver()
 
 
@@ -350,7 +348,8 @@ class StartTravelFragment(
 
         _binding?.btnTakephoto?.setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_DENIED) {
+                != PackageManager.PERMISSION_DENIED
+            ) {
 
                 PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
                     .setOnPickResult(object : IPickResult {
@@ -383,7 +382,7 @@ class StartTravelFragment(
                             //TODO: do what you have to if user clicked cancel
                         }
                     }).show(this.childFragmentManager)
-            }else{
+            } else {
                 requestPermissions(
                     arrayOf(
                         Manifest.permission.CAMERA,
@@ -442,6 +441,7 @@ class StartTravelFragment(
             checkBackgroundLocation()
         }
     }
+
     private fun registerObserver() {
         cmrDataViewModel =
             ViewModelProviders.of(this)
@@ -523,14 +523,14 @@ class StartTravelFragment(
 
 
                 // Showing Alert Message
-                if (alertDialog.isShowing){
+                if (alertDialog.isShowing) {
                     alertDialog.dismiss()
                 }
                 alertDialog.show()
             } else {
                 if (!it.errorMessage.toString().equals("null")) {
                     msclass?.showMessage(it.errorMessage.toString())
-                }else{
+                } else {
                     msclass?.showMessage("Something went wrong")
                 }
             }
@@ -667,19 +667,21 @@ class StartTravelFragment(
 
         //  llProgressBarStartTravel.visibility = View.GONE
 
-        if (travel.uStartLat.isNotEmpty() && travel.uStartLng.isNotEmpty() &&!travel.uStartLat.equals("0.0")&& !travel.uStartLng.equals("0.0"))  {
+        if (travel.uStartLat.isNotEmpty() && travel.uStartLng.isNotEmpty() && !travel.uStartLat.equals(
+                "0.0"
+            ) && !travel.uStartLng.equals("0.0")
+        ) {
             val inserted = wordViewModel.insert(travel).isCompleted
         } else {
 
             val gpsTracker = GPSTracker(context)
-            if (gpsTracker.getIsGPSTrackingEnabled())
-            {
-             latitude =   gpsTracker.latitude.toString()
+            if (gpsTracker.getIsGPSTrackingEnabled()) {
+                latitude = gpsTracker.latitude.toString()
                 longitude = gpsTracker.longitude.toString()
 
-                if (latitude.equals("")||longitude.equals("")){
+                if (latitude.equals("") || longitude.equals("")) {
                     msclass?.showMessage("Unable to access location")
-                }else{
+                } else {
                     addData()
                 }
 
@@ -769,7 +771,7 @@ class StartTravelFragment(
                         }
                         .setNegativeButton(
                             "Deny"
-                        ) { dialog, id ->  }
+                        ) { dialog, id -> }
                     val alert = builder.create()
                     alert.show()
 //                    Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show()
@@ -884,14 +886,14 @@ class StartTravelFragment(
 
     companion object {
 
-      /*   @JvmStatic
-         fun newInstance(param1: WordViewModel, param2: CMRDataViewModel?) =
-             StartTravelFragment(param1,param2).apply {
-                 arguments = Bundle().apply {
-                     putString(ARG_PARAM1, param1)
-                     putString(ARG_PARAM2, param2)
-                 }
-             }*/
+        /*   @JvmStatic
+           fun newInstance(param1: WordViewModel, param2: CMRDataViewModel?) =
+               StartTravelFragment(param1,param2).apply {
+                   arguments = Bundle().apply {
+                       putString(ARG_PARAM1, param1)
+                       putString(ARG_PARAM2, param2)
+                   }
+               }*/
 
         private const val MY_PERMISSIONS_REQUEST_LOCATION = 99
         private const val MY_PERMISSIONS_REQUEST_BACKGROUND_LOCATION = 66
@@ -902,7 +904,7 @@ class StartTravelFragment(
         // Create an image file name
         val sharedPreference: SharedPreference? = context?.let { SharedPreference(it) }
         val encryptedUserCode = sharedPreference?.getValueString(Constant.USER_CODE)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageFileName = decryptedUserCode + "_start_" + timeStamp + "_"
         val storageDir = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
@@ -920,14 +922,14 @@ class StartTravelFragment(
         if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
 
 
-         //   val bitmap = myBitmap(BitmapFactory.decodeFile(photoFile!!.absolutePath))
+            //   val bitmap = myBitmap(BitmapFactory.decodeFile(photoFile!!.absolutePath))
 
 
-          /*  if (bitmap != null) {
-                imageBitmap = bitmap
-                binding?.ivImage?.setImageBitmap(bitmap)
-                _binding?.ivImage?.visibility = View.VISIBLE
-            }*/
+            /*  if (bitmap != null) {
+                  imageBitmap = bitmap
+                  binding?.ivImage?.setImageBitmap(bitmap)
+                  _binding?.ivImage?.visibility = View.VISIBLE
+              }*/
         } else {
             msclass!!.showMessage("Request cancelled or something went wrong.")
         }

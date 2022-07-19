@@ -76,13 +76,13 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         context = this
         //  setUI()
-        CoroutineScope(Main).launch  {
+        CoroutineScope(Main).launch {
             llProgressBar.visibility = View.VISIBLE
             checkData()
         }
 
         tabs.setupWithViewPager(viewcontainer)
-       // setupTabIcons()
+        // setupTabIcons()
 
         msclass = Messageclass(this)
 
@@ -99,7 +99,7 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
             val pInfo: PackageInfo =
                 context.packageManager.getPackageInfo(context.packageName, 0)
             val version: String = pInfo.versionName
-            textViewVersionName.text = "version : "+version
+            textViewVersionName.text = "version : " + version
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
@@ -108,10 +108,11 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
 
     override fun onResume() {
         super.onResume()
-        if (!Constant.isTimeAutomatic(this)){
+        if (!Constant.isTimeAutomatic(this)) {
             msclass?.showAutomaticTimeMessage("Please update time setting to automatic")
         }
     }
+
     @SuppressLint("ServiceCast")
     private fun isNetworkConnected(): Boolean {
         val cm: ConnectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -121,7 +122,7 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
     private suspend fun checkData() {
         val sd = SimpleDateFormat("MM/dd/yyyy")
         val currentDate = sd.format(Date())
-     val list = wordViewModel.getCurrentTravel(currentDate) as MutableList<Word>
+        val list = wordViewModel.getCurrentTravel(currentDate) as MutableList<Word>
         for (item in list) {
             if (item.uType == "end") {
                 msclass?.showMessage("Tour is completed for today")
@@ -137,46 +138,46 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
             }
         }
 
-       /* wordViewModel.getCurrentDateTravelType(currentDate,"end")
-            .observe(owner = this) { words ->
-            // Update the cached copy of the words in the adapter.
-            words.let {
-                Log.e("end", "onCreateView: " + it)
-            }
-                for (item in eventList) {
-                    if (item.uType == "end") {
-                        msclass?.showMessage("Tour is completed for today")
+        /* wordViewModel.getCurrentDateTravelType(currentDate,"end")
+             .observe(owner = this) { words ->
+             // Update the cached copy of the words in the adapter.
+             words.let {
+                 Log.e("end", "onCreateView: " + it)
+             }
+                 for (item in eventList) {
+                     if (item.uType == "end") {
+                         msclass?.showMessage("Tour is completed for today")
 
-                        fragment_List.clear()
-                        fragmentTitle.clear()
-                        fragmentTitle.add("View Travel")
-                        fragment_List.add(ViewTravelFragment(wordViewModel))
-                        setupViewPager(viewcontainer)
+                         fragment_List.clear()
+                         fragmentTitle.clear()
+                         fragmentTitle.add("View Travel")
+                         fragment_List.add(ViewTravelFragment(wordViewModel))
+                         setupViewPager(viewcontainer)
 
-                        llProgressBar.visibility = View.GONE
-                        return@observe
-                    }
-                }
+                         llProgressBar.visibility = View.GONE
+                         return@observe
+                     }
+                 }
 
-        }
-*/
+         }
+ */
         eventList.clear()
-       eventList = wordViewModel.getCurrentTravel(currentDate) as MutableList<Word>
-        if (eventList != null && eventList.size != 0){
+        eventList = wordViewModel.getCurrentTravel(currentDate) as MutableList<Word>
+        if (eventList != null && eventList.size != 0) {
 
-            for (item in eventList){
-                if (item.uType == "end"){
+            for (item in eventList) {
+                if (item.uType == "end") {
 //                    textTravelComplete.visibility = View.VISIBLE
                     msclass?.showMessage("Tour is completed for today")
-                            fragment_List.clear()
-                            fragmentTitle.clear()
-                            fragmentTitle.add("View Travel")
-                            fragment_List.add(ViewTravelFragment(wordViewModel))
+                    fragment_List.clear()
+                    fragmentTitle.clear()
+                    fragmentTitle.add("View Travel")
+                    fragment_List.add(ViewTravelFragment(wordViewModel))
                     setupViewPager(viewcontainer)
 
                     llProgressBar.visibility = View.GONE
                     return
-                }else{
+                } else {
                     fragment_List.clear()
                     fragmentTitle.clear()
                     fragmentTitle.add("Add Event")
@@ -186,12 +187,11 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
                     fragment_List.add(EndTravelFragment())
                     setupViewPager(viewcontainer)
                     llProgressBar.visibility = View.GONE
-                 //   return
+                    //   return
                 }
             }
 
-        }
-        else{
+        } else {
             fragment_List.clear()
             fragmentTitle.clear()
             fragmentTitle.add("Start travel")
@@ -206,36 +206,35 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
     }
 
 
-
     private fun syncData() {
         update = true
         tourList.clear()
 
 
-      /*  wordViewModel.getTravelType("start")
-            .observe(owner = this) { words ->
-                // Update the cached copy of the words in the adapter.
-                words.let {
-                    Log.e("end", "onCreateView: " + it.size)
-                }
-                tourList.addAll(words)
-                if (tourList.size != 0) {
-                    if (update) {
-                        cmrDataViewModel?.postTourEventDataAPI(tourList)
-                    }
-                    val sd = SimpleDateFormat("MM/dd/yyyy")
-                    val currentDate = sd.format(Date())
+        /*  wordViewModel.getTravelType("start")
+              .observe(owner = this) { words ->
+                  // Update the cached copy of the words in the adapter.
+                  words.let {
+                      Log.e("end", "onCreateView: " + it.size)
+                  }
+                  tourList.addAll(words)
+                  if (tourList.size != 0) {
+                      if (update) {
+                          cmrDataViewModel?.postTourEventDataAPI(tourList)
+                      }
+                      val sd = SimpleDateFormat("MM/dd/yyyy")
+                      val currentDate = sd.format(Date())
 
-                }
-            }
-*/
+                  }
+              }
+  */
         GlobalScope.launch {
             val listTourEvent = wordViewModel.allWords()
             val gson = Gson()
             val json = gson.toJson(listTourEvent)
-            Log.d("allData", "syncData: "+json)
+            Log.d("allData", "syncData: " + json)
         }
-          wordViewModel.getNotTravelType("start")
+        wordViewModel.getNotTravelType("start")
             .observe(owner = this) { words ->
                 // Update the cached copy of the words in the adapter.
                 words.let {
@@ -339,14 +338,14 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
 
 
                 // Showing Alert Message
-                if (alertDialog.isShowing){
+                if (alertDialog.isShowing) {
                     alertDialog.dismiss()
                 }
                 alertDialog.show()
             } else {
                 if (!it.errorMessage.toString().equals("null")) {
                     msclass?.showMessage(it.errorMessage.toString())
-                }else{
+                } else {
                     msclass?.showMessage("Something went wrong")
                 }
             }
@@ -357,9 +356,9 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (llProgressBar.visibility == View.VISIBLE){
+        if (llProgressBar.visibility == View.VISIBLE) {
             return false
-        }else{
+        } else {
             return super.onTouchEvent(event)
         }
 

@@ -2,15 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/relativeLayout"
     android:background="@drawable/home_background"
     tools:context=".MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -26,6 +27,7 @@
                 android:columnCount="1"
                 android:columnOrderPreserved="false"
                 android:rowCount="13">
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cd_cmr_my_travel"
                     android:layout_width="match_parent"
@@ -60,13 +62,14 @@
                         <ImageView
                             android:layout_width="@dimen/dp_40"
                             android:layout_height="@dimen/dp_40"
-                            android:src="@drawable/ic_action_go"
-                            android:layout_marginEnd="@dimen/dp_20"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"/>
+                            android:layout_marginEnd="@dimen/dp_20"
+                            android:src="@drawable/ic_action_go" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cd_cmr_my_travel_report"
                     android:layout_width="match_parent"
@@ -103,10 +106,10 @@
                         <ImageView
                             android:layout_width="@dimen/dp_40"
                             android:layout_height="@dimen/dp_40"
-                            android:src="@drawable/ic_action_go"
-                            android:layout_marginEnd="@dimen/dp_20"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"/>
+                            android:layout_marginEnd="@dimen/dp_20"
+                            android:src="@drawable/ic_action_go" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
@@ -116,13 +119,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_height"
                     android:layout_margin="@dimen/dp_10"
-                    app:cardCornerRadius="@dimen/dp_12"
-                    app:cardElevation="@dimen/dp_5"
                     android:clickable="true"
                     android:focusable="true"
-                    android:visibility="gone"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardBackgroundColor="@color/colorPrimary">
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="@dimen/dp_5">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -212,8 +215,8 @@
                     android:id="@+id/cd_download_cmr_data"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_height"
-                    android:visibility="gone"
                     android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
@@ -255,8 +258,8 @@
                     android:id="@+id/cd_field_area_tag"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_height"
-                    android:visibility="gone"
                     android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
@@ -296,9 +299,9 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cd_cmr_entry"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="@dimen/card_height"
                     android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
@@ -341,8 +344,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_height"
 
-                    android:visibility="gone"
                     android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
@@ -383,8 +386,8 @@
                     android:id="@+id/cd_cmr_update"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_height"
-                    android:visibility="gone"
                     android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
@@ -428,7 +431,8 @@
                     android:layout_height="@dimen/card_height"
                     android:layout_margin="@dimen/dp_10"
 
-                    android:visibility="gone"  app:cardBackgroundColor="@color/colorPrimary"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
 
@@ -457,10 +461,10 @@
                         <ImageView
                             android:layout_width="@dimen/dp_40"
                             android:layout_height="@dimen/dp_40"
-                            android:src="@drawable/ic_action_go"
-                            android:layout_marginEnd="@dimen/dp_20"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"/>
+                            android:layout_marginEnd="@dimen/dp_20"
+                            android:src="@drawable/ic_action_go" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
@@ -470,8 +474,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_height"
 
-                    android:visibility="gone"
                     android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
@@ -502,10 +506,10 @@
                         <ImageView
                             android:layout_width="@dimen/dp_40"
                             android:layout_height="@dimen/dp_40"
-                            android:src="@drawable/ic_action_go"
-                            android:layout_marginEnd="@dimen/dp_20"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"/>
+                            android:layout_marginEnd="@dimen/dp_20"
+                            android:src="@drawable/ic_action_go" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
@@ -514,8 +518,9 @@
                     android:id="@+id/cd_cmr_grower_issues"
                     android:layout_width="match_parent"
 
-                    android:visibility="gone"   android:layout_height="@dimen/card_height"
+                    android:layout_height="@dimen/card_height"
                     android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
@@ -546,14 +551,13 @@
                         <ImageView
                             android:layout_width="@dimen/dp_40"
                             android:layout_height="@dimen/dp_40"
-                            android:src="@drawable/ic_action_go"
-                            android:layout_marginEnd="@dimen/dp_20"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"/>
+                            android:layout_marginEnd="@dimen/dp_20"
+                            android:src="@drawable/ic_action_go" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
-
 
 
                 <androidx.cardview.widget.CardView
@@ -591,20 +595,20 @@
                         <ImageView
                             android:layout_width="@dimen/dp_40"
                             android:layout_height="@dimen/dp_40"
-                            android:src="@drawable/ic_action_go"
-                            android:layout_marginEnd="@dimen/dp_20"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"/>
+                            android:layout_marginEnd="@dimen/dp_20"
+                            android:src="@drawable/ic_action_go" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cd_voct"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/card_height"
                     android:layout_margin="@dimen/dp_10"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/colorPrimary"
                     app:cardCornerRadius="@dimen/dp_12"
                     app:cardElevation="@dimen/dp_5">
@@ -626,7 +630,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:layout_centerVertical="true"                        android:text="@string/voct"
+                            android:layout_centerVertical="true"
+                            android:text="@string/voct"
                             android:textColor="@color/white"
                             android:textSize="@dimen/sp_16"
                             android:textStyle="bold" />
@@ -648,15 +653,15 @@
     </ScrollView>
 
     <ImageView
-        android:layout_width="@dimen/dp_40"
         android:id="@+id/downloadCrmData"
-        android:background="@drawable/circle_white"
-        android:src="@drawable/downloading"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/dp_20"
-        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
         android:layout_alignParentEnd="true"
-        android:layout_height="@dimen/dp_40"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:background="@drawable/circle_white"
+        android:src="@drawable/downloading" />
 
     <include
         android:id="@+id/llProgressBar"
@@ -664,13 +669,13 @@
         android:visibility="gone" />
 
     <TextView
+        android:id="@+id/textViewVersionName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:text="ver"
-        android:id="@+id/textViewVersionName"
         android:layout_marginHorizontal="@dimen/dp_10"
-        android:textColor="@color/black"/>
+        android:text="ver"
+        android:textColor="@color/black" />
 
 </RelativeLayout>

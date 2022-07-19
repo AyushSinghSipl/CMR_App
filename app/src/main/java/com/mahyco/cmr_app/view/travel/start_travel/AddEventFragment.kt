@@ -491,7 +491,8 @@ class AddEvenFragment() : Fragment() {
 
         _binding?.btnTakephoto?.setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_DENIED) {
+                != PackageManager.PERMISSION_DENIED
+            ) {
 
                 PickImageDialog.build(PickSetup().setPickTypes(EPickType.CAMERA))
                     .setOnPickResult(object : IPickResult {
@@ -524,7 +525,7 @@ class AddEvenFragment() : Fragment() {
                             //TODO: do what you have to if user clicked cancel
                         }
                     }).show(this.childFragmentManager)
-            }else{
+            } else {
                 requestPermissions(
                     arrayOf(
                         Manifest.permission.CAMERA,
@@ -587,18 +588,20 @@ class AddEvenFragment() : Fragment() {
         )
         //  llProgressBarStartTravel.visibility = View.GONE
 
-        if (travel.uEventLat.isNotEmpty() && travel.uEventLng.isNotEmpty()&& !travel.uEventLng.equals("0.0")&& !travel.uEventLat.equals("0.0")) {
+        if (travel.uEventLat.isNotEmpty() && travel.uEventLng.isNotEmpty() && !travel.uEventLng.equals(
+                "0.0"
+            ) && !travel.uEventLat.equals("0.0")
+        ) {
             val inserted = wordViewModel.insert(travel).isCompleted
         } else {
             val gpsTracker = GPSTracker(context)
-            if (gpsTracker.getIsGPSTrackingEnabled())
-            {
-                latitude =   gpsTracker.latitude.toString()
+            if (gpsTracker.getIsGPSTrackingEnabled()) {
+                latitude = gpsTracker.latitude.toString()
                 longitude = gpsTracker.longitude.toString()
 
-                if (latitude.equals("")||longitude.equals("")){
+                if (latitude.equals("") || longitude.equals("")) {
                     msclass?.showMessage("Unable to access location")
-                }else{
+                } else {
                     addData()
                 }
 
@@ -845,7 +848,7 @@ class AddEvenFragment() : Fragment() {
                         }
                         .setNegativeButton(
                             "Deny"
-                        ) { dialog, id ->  }
+                        ) { dialog, id -> }
                     val alert = builder.create()
                     alert.show()
 //                    Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show()
