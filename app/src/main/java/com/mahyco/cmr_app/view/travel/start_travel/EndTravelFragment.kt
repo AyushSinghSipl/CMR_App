@@ -179,11 +179,11 @@ class EndTravelFragment() : Fragment() {
 
         //        For handling Progress bar
         cmrDataViewModel!!.loadingLiveData.observe(this, androidx.lifecycle.Observer {
-           /* if (it) {tjhtrjh
-                llProgressBarStartTravel.visibility = View.VISIBLE
+            if (it) {
+                binding.llProgressBarEndTravel.visibility = View.VISIBLE
             } else {
-                llProgressBarStartTravel.visibility = View.GONE
-            }*/
+                binding.llProgressBarEndTravel.visibility = View.GONE
+            }
         })
 
 //        In Case of error will show error in  toast message
@@ -690,7 +690,7 @@ class EndTravelFragment() : Fragment() {
                 } else {
                     if (is_visible) {
                         if (validate()) {
-
+                            binding.llProgressBarEndTravel.visibility = View.VISIBLE
                             lifecycleScope.launch {
                                 addData()
                             }
@@ -824,7 +824,7 @@ class EndTravelFragment() : Fragment() {
                 llProgressBarStartTravel.visibility = View.GONE
             }
         }
-
+        binding.llProgressBarEndTravel.visibility = View.GONE
 
 
 
