@@ -19,7 +19,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -51,9 +50,6 @@ import com.mahyco.cmr_app.viewmodel.CMRDataViewModel
 import com.mahyco.isp.core.MainApplication
 import com.mahyco.rcbucounterboys2020.utils.SharedPreference
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.llProgressBar
-import kotlinx.android.synthetic.main.activity_main.textViewVersionName
-import kotlinx.android.synthetic.main.activity_my_travel.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -187,18 +183,12 @@ class MainActivity : BaseActivity() {
     }
 
 
-    override fun onDestroy() {
-        //unregisterInstallStateUpdListener()
-        super.onDestroy()
-    }
-
-
     private fun checkForAppUpdate() {
         // Creates instance of the manager.
         appUpdateManager = AppUpdateManagerFactory.create(this)
 
         // Returns an intent object that you use to check for an update.
-        val appUpdateInfoTask: Task<AppUpdateInfo> = appUpdateManager!!.getAppUpdateInfo()
+        val appUpdateInfoTask: Task<AppUpdateInfo> = appUpdateManager!!.appUpdateInfo
 
         // Create a listener to track request state updates.
         installStateUpdatedListener =
@@ -287,7 +277,7 @@ class MainActivity : BaseActivity() {
                         .get()
                         .select(".hAyfc .htlgb")
                         .get(7)
-                        .ownText();
+                        .ownText()
                 Toast.makeText(this@MainActivity, newVersion.toString(), Toast.LENGTH_SHORT).show()
             })
         } catch (e: Exception) {
@@ -357,11 +347,11 @@ class MainActivity : BaseActivity() {
             AlertDialog.Builder(this)
                 .setMessage("PLease enable your location from setting")
                 .setPositiveButton("Enable", DialogInterface.OnClickListener { dialogInterface, i ->
-                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
 
                 })
                 .setNegativeButton("Cancel", null)
-                .show();
+                .show()
         }
 
         downloadCrmData.setOnClickListener {
@@ -452,11 +442,11 @@ class MainActivity : BaseActivity() {
                             startActivityForResult(
                                 Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
                                 6000
-                            );
+                            )
 
                         })
                     .setNegativeButton("Cancel", null)
-                    .show();
+                    .show()
             } else {
                 val sharedPreference: SharedPreference = SharedPreference(this)
                 val gson = Gson()
@@ -509,7 +499,7 @@ class MainActivity : BaseActivity() {
 
                 })
             .setNegativeButton("Cancel", null)
-            .show();
+            .show()
     }
 
     private fun requestLocationPermission() {
@@ -537,11 +527,11 @@ class MainActivity : BaseActivity() {
                             startActivityForResult(
                                 Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
                                 6000
-                            );
+                            )
 
                         })
                     .setNegativeButton("Cancel", null)
-                    .show();
+                    .show()
             } else {
                 val sharedPreference: SharedPreference = SharedPreference(this)
                 val gson = Gson()
@@ -563,30 +553,11 @@ class MainActivity : BaseActivity() {
                         val intent = Intent(this, MyTravelActivity::class.java)
                         startActivityThis(intent)
                     } else {
-                        AlertDialog.Builder(this)
-                            .setMessage("Please download CRM data first")
-                            .setPositiveButton(
-                                "Download",
-                                DialogInterface.OnClickListener { dialogInterface, i ->
-                                    cmrDataViewModel?.getVehicleType()
-                                    cmrDataViewModel?.getActivityType()
-
-                                })
-                            .setNegativeButton("Cancel", null)
-                            .show();
+                        downloadData()
                     }
                 } else {
-                    AlertDialog.Builder(this)
-                        .setMessage("Please download CRM data first")
-                        .setPositiveButton(
-                            "Download",
-                            DialogInterface.OnClickListener { dialogInterface, i ->
-                                cmrDataViewModel?.getVehicleType()
-                                cmrDataViewModel?.getActivityType()
+                    downloadData()
 
-                            })
-                        .setNegativeButton("Cancel", null)
-                        .show();
                 }
             }
         }
