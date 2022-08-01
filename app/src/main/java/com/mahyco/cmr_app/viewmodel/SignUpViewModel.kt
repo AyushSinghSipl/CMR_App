@@ -3,13 +3,11 @@ package com.mahyco.cmr_app.viewmodel
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
 import com.mahyco.cmr_app.R
 import com.mahyco.cmr_app.api.IDataServiceCMR
 import com.mahyco.cmr_app.api.IOnBoardingService
 import com.mahyco.cmr_app.core.Constant
 import com.mahyco.cmr_app.core.DLog
-import com.mahyco.cmr_app.model.getVehicleTypeResponse.GetVehicleTypeResponseItem
 import com.mahyco.cmr_app.model.login.LoginParam
 import com.mahyco.cmr_app.model.login.LoginResponseModel
 import com.mahyco.cmr_app.repositories.ImplCMRDataRepo
@@ -24,6 +22,7 @@ import io.reactivex.schedulers.Schedulers
 
 class SignUpViewModel(application: Application) : BaseViewModel(application) {
 
+
     private var mContext: Context = application
     private var iActivationAPIService: IOnBoardingService
     private var iServiceISP: IDataServiceCMR
@@ -36,6 +35,8 @@ class SignUpViewModel(application: Application) : BaseViewModel(application) {
         iActivationAPIService = apiClient.create(IOnBoardingService::class.java)
         iServiceISP = apiClient.create(IDataServiceCMR::class.java)
     }
+
+     fun SignUpViewModel() {}
 
     fun callLoginApi(
        loginParam: LoginParam

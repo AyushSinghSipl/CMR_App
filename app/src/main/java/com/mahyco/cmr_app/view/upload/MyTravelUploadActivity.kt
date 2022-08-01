@@ -17,7 +17,6 @@ import com.mahyco.cmr_app.core.DLog
 import com.mahyco.cmr_app.core.Messageclass
 import com.mahyco.cmr_app.viewmodel.CMRDataViewModel
 import com.mahyco.isp.core.MainApplication
-import kotlinx.android.synthetic.main.activity_my_travel.*
 import kotlinx.android.synthetic.main.activity_my_travel_upload.*
 import kotlinx.android.synthetic.main.activity_my_travel_upload.llProgressBar
 import kotlinx.coroutines.launch

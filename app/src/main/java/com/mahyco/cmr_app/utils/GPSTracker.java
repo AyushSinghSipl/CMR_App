@@ -150,6 +150,23 @@ public class GPSTracker extends Service implements LocationListener {
 
             //e.printStackTrace();
             Log.e(TAG, "Impossible to connect to LocationManager", e);
+            AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
+            // Setting Dialog Title
+            alertDialog.setTitle("Crop Monitor Report");
+            // Setting Dialog Message
+            alertDialog.setMessage("Unable to get location please check your GPS ");
+            // Setting Icon to Dialog
+            //alertDialog.setIcon(R.drawable.tick);
+            // Setting OK Button
+            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Write your code here to execute after dialog closed
+                    //        Toast.makeText(getApplicationContext(), "You clicked on OK", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // Showing Alert Message
+            alertDialog.show();
         }
     }
 

@@ -4,18 +4,17 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.observe
 import com.example.android.roomwordssample.Word
 import com.example.android.roomwordssample.WordViewModel
 import com.mahyco.cmr_app.core.Constant
 import com.mahyco.cmr_app.core.Messageclass
+import com.mahyco.isp.core.MainApplication
 import com.mahyco.rcbucounterboys2020.utils.EncryptDecryptManager
 import com.mahyco.rcbucounterboys2020.utils.SharedPreference
 import kotlinx.coroutines.runBlocking
@@ -32,7 +31,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ViewTravelFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ViewTravelFragment(val wordViewModel: WordViewModel) : Fragment() {
+class ViewTravelFragment() : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -42,6 +41,7 @@ class ViewTravelFragment(val wordViewModel: WordViewModel) : Fragment() {
     private val eventList: MutableList<Word> = ArrayList()
     private var list: MutableList<Word> = ArrayList()
     private var adapter: EventsAdapter? = null
+    private lateinit var wordViewModel: WordViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,52 +67,77 @@ class ViewTravelFragment(val wordViewModel: WordViewModel) : Fragment() {
         msclass = Messageclass(this.activity)
         val sd = SimpleDateFormat("MM/dd/yyyy")
         val currentDate = sd.format(Date())
+        wordViewModel = WordViewModel(
+            (activity?.application as MainApplication).repository,
+            activity?.application as MainApplication
+        )
 
-runBlocking {
-    list.clear()
-    list = wordViewModel.getCurrentTravel(currentDate) as MutableList<Word>
 
-    for (item in list){
-        if (item.uType == "end"){
+        runBlocking {
+            list.clear()
+            list = wordViewModel.getCurrentTravel(currentDate) as MutableList<Word>
 
-            var spfdate = SimpleDateFormat("MM/dd/yyyy")
-            val uDate = spfdate.parse(item.uDate)
-            spfdate = SimpleDateFormat("dd/MM/yyyy")
-            val u_date = spfdate.format(uDate)
+            for (item in list) {
+                if (item.uType == "end") {
 
-            binding.textViewDate.text = u_date
-            var spf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            val newDate = spf.parse(item.uStartDateTime)
-            spf = SimpleDateFormat("MMM dd, yyyy hh:mm:ss aaa")
-            val date = spf.format(newDate);
-            binding.textViewStartDateTime.text = date.toString()
-            var spfEnd = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-            val endDate = spfEnd.parse(item.uEndDateTime)
-            val endDateTime = spf.format(endDate);
-            binding.textViewEndDateTime.text = endDateTime
-            binding.textViewStartKm.text = item.uKmReadingStart
-            binding.textViewEndKm.text = item.uKmReadingEnd
+                    var spfdate = SimpleDateFormat("MM/dd/yyyy")
+                    val uDate = spfdate.parse(item.uDate)
+                    spfdate = SimpleDateFormat("dd/MM/yyyy")
+                    val u_date = spfdate.format(uDate)
 
-            val decodedString: ByteArray = Base64.decode(item.uKmImageStart, Base64.DEFAULT)
-            val decodedByte: Bitmap =
-                BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-            binding.imageViewStart.setImageBitmap(decodedByte)
+                    binding.textViewDate.text = u_date
+                    var spf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                    val newDate = spf.parse(item.uStartDateTime)
+                    spf = SimpleDateFormat("MMM dd, yyyy hh:mm:ss aaa")
+                    val date = spf.format(newDate);
+                    binding.textViewStartDateTime.text = date.toString()
+                    var spfEnd = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                    val endDate = spfEnd.parse(item.uEndDateTime)
+                    val endDateTime = spf.format(endDate);
+                    binding.textViewEndDateTime.text = endDateTime
 
-            val decodedStringEnd: ByteArray = Base64.decode(item.uKmImageEnd, Base64.DEFAULT)
-            val decodedByteEnd: Bitmap =
-                BitmapFactory.decodeByteArray(decodedStringEnd, 0, decodedStringEnd.size)
-            binding.imageViewEnd.setImageBitmap(decodedByteEnd)
-            if (item.uStatus == "1"){
-                binding.textViewStatus.text = "Uploaded"
-            }else{
-                binding.textViewStatus.text = "Not-Uploaded"
+                    if (item.uVehicleType != "OTHER") {
+
+                        binding.textViewStartKm.text = item.uKmReadingStart
+                        binding.textViewEndKm.text = item.uKmReadingEnd
+
+                        val decodedString: ByteArray =
+                            Base64.decode(item.uKmImageStart, Base64.DEFAULT)
+                        val decodedByte: Bitmap =
+                            BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                        binding.imageViewStart.setImageBitmap(decodedByte)
+
+                        val decodedStringEnd: ByteArray =
+                            Base64.decode(item.uKmImageEnd, Base64.DEFAULT)
+                        val decodedByteEnd: Bitmap =
+                            BitmapFactory.decodeByteArray(
+                                decodedStringEnd,
+                                0,
+                                decodedStringEnd.size
+                            )
+                        binding.imageViewEnd.setImageBitmap(decodedByteEnd)
+                    } else {
+                        binding.textViewStartKm.visibility = View.GONE
+                        binding.textViewEndKm.visibility = View.GONE
+                        binding.imageViewEnd.visibility = View.GONE
+                        binding.imageViewStart.visibility = View.GONE
+                        binding.startKmText.visibility = View.GONE
+                        binding.endKmText.visibility = View.GONE
+                        binding.startImageText.visibility = View.GONE
+                        binding.endImageText.visibility = View.GONE
+                    }
+
+                    if (item.uStatus == "1") {
+                        binding.textViewStatus.text = "Uploaded"
+                    } else {
+                        binding.textViewStatus.text = "Not-Uploaded"
+                    }
+                } else
+                    if (item.uType == "add_event") {
+                        eventList.add(item)
+                    }
             }
-        }else
-            if (item.uType == "add_event"){
-                eventList.add(item)
-            }
-    }
-}
+        }
         adapter = EventsAdapter(requireContext(), eventList)
         binding.expendableList!!.setAdapter(adapter)
 
@@ -123,7 +148,7 @@ runBlocking {
 
         val sharedPreference: SharedPreference = SharedPreference(requireContext())
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_NAME)
-        val decryptedUserCode = ""+ EncryptDecryptManager.decryptStringData(encryptedUserCode)
+        val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
 
         binding.lblwelcome.text = decryptedUserCode
 

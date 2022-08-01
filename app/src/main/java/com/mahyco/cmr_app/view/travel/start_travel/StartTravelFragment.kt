@@ -1,7 +1,6 @@
 package com.mahyco.cmr_app.view.travel.start_travel
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -10,22 +9,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
-import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
-import android.text.TextUtils
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -125,7 +120,7 @@ class StartTravelFragment(
     private lateinit var wordViewModel: WordViewModel
     lateinit var cmrDataViewModel: CMRDataViewModel
 
-
+    var alert: AlertDialog? = null
     private var job: Job = Job()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -169,7 +164,7 @@ class StartTravelFragment(
 
 
 
-        if (!isLocationEnabled(requireContext())) {
+        if (!Constant.isLocationEnabled(requireContext())) {
             // notify user
 
             AlertDialog.Builder(context)
@@ -178,11 +173,12 @@ class StartTravelFragment(
                     context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 
                 })
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton("Cancel",  null)
                 .show();
-        } else {
-            setListner()
+        }else{
+            checkLocationPermission()
         }
+        setListner()
         val sharedPreference: SharedPreference = SharedPreference(requireContext())
         val encryptedUserCode = sharedPreference.getValueString(Constant.USER_NAME)
         val decryptedUserCode = "" + EncryptDecryptManager.decryptStringData(encryptedUserCode)
@@ -193,26 +189,6 @@ class StartTravelFragment(
     }
 
 
-    fun isLocationEnabled(context: Context): Boolean {
-        var locationMode = 0
-        val locationProviders: String
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            locationMode = try {
-                Settings.Secure.getInt(context.contentResolver, Settings.Secure.LOCATION_MODE)
-            } catch (e: Settings.SettingNotFoundException) {
-                e.printStackTrace()
-                return false
-            }
-            locationMode != Settings.Secure.LOCATION_MODE_OFF
-
-        } else {
-            locationProviders = Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.LOCATION_PROVIDERS_ALLOWED
-            )
-            !TextUtils.isEmpty(locationProviders)
-        }
-    }
 
 
     private fun checkData() {
@@ -229,7 +205,6 @@ class StartTravelFragment(
                 .observe(owner = this) { words ->
                     // Update the cached copy of the words in the adapter.
                     words.let {
-                        Log.e("start", "onCreateView: " + it.size)
                     }
                     if (words.size != 0) {
                         if (isVisibleTo_User) {
@@ -245,7 +220,7 @@ class StartTravelFragment(
                 .observe(owner = this) { words ->
                     // Update the cached copy of the words in the adapter.
                     words.let {
-                        Log.e("end", "onCreateView: " + it)
+//                        Log.e("end", "onCreateView: " + it)
                     }
                     if (words.size != 0) {
                         if (isVisibleTo_User) {
@@ -267,7 +242,7 @@ class StartTravelFragment(
         super.setUserVisibleHint(isVisibleToUser)
         if (isVisibleToUser) {
             isVisibleTo_User = true
-            checkData()
+          //  checkData()
         } else {
             isVisibleTo_User = false
         }
@@ -276,7 +251,6 @@ class StartTravelFragment(
 
 
     private fun setListner() {
-
 
         if (imageBitmap == null) {
             binding.ivImage.visibility == View.GONE
@@ -293,7 +267,7 @@ class StartTravelFragment(
                 .observe(owner = viewLifecycleOwner) { words ->
                     // Update the cached copy of the words in the adapter.
                     words.let {
-                        Log.e("start", "onCreateView: " + it.size)
+//                        Log.e("start", "onCreateView: " + it.size)
                     }
 
                     if (words != null && words.size != 0) {
@@ -301,11 +275,12 @@ class StartTravelFragment(
                             for (item in words) {
                                 if (item.uStartDateTime == dateTime) {
                                     CoroutineScope(Main).launch {
-                                        if (isNetworkConnected()) {
+                                        if (Constant.isNetworkConnected(requireContext())) {
                                             val tourList: MutableList<Word> =
                                                 wordViewModel.allWords() as MutableList<Word>
                                             if (tourList.size != 0) {
                                                 cmrDataViewModel?.postTourEventDataAPI(tourList)
+
 
                                             }
                                         } else {
@@ -332,15 +307,28 @@ class StartTravelFragment(
                         }
                     }
                 }
+            if (!Constant.isLocationEnabled(requireContext())){
 
-            checkLocationPermission()
-            if (validate()) {
-                binding.llProgressBarStartTravel.visibility = View.VISIBLE
-                lifecycleScope.launch {
-                    addData()
+                AlertDialog.Builder(context)
+                    .setMessage("PLease enable your location from settings")
+                    .setPositiveButton(
+                        " Enable ",
+                        DialogInterface.OnClickListener { dialogInterface, i ->
+                            context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 
+                        })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+            }else {
+                if (checkLocationPermission()) {
+                    if (validate()) {
+                        binding.llProgressBarStartTravel.visibility = View.VISIBLE
+                        lifecycleScope.launch {
+                            addData()
+                        }
+
+                    }
                 }
-
             }
 
         }
@@ -398,14 +386,9 @@ class StartTravelFragment(
 
     }
 
-    @SuppressLint("ServiceCast")
-    private fun isNetworkConnected(): Boolean {
-        val cm: ConnectivityManager =
-            context?.getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo()!!.isConnected()
-    }
 
-    private fun checkLocationPermission() {
+
+    private fun checkLocationPermission():Boolean {
         if (ActivityCompat.checkSelfPermission(
                 this.requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -417,6 +400,11 @@ class StartTravelFragment(
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
             ) {
+                if (alert !=null){
+                    if (alert!!.isShowing) {
+                        alert!!.dismiss()
+                    }
+                }
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -426,20 +414,32 @@ class StartTravelFragment(
                     .setPositiveButton(
                         "Allow"
                     ) { dialog, id ->
-                        requestLocationPermission()
+                        dialog.dismiss()
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri: Uri =
+                                Uri.fromParts("package", requireContext().getPackageName(), null)
+                            intent.data = uri
+                            startActivity(intent)
+
+
+
                     }
                     .setNegativeButton(
                         "Deny"
                     ) { dialog, id -> activity?.finish() }
-                val alert = builder.create()
-                alert.show()
+                 alert = builder.create()
+                alert?.show()
+                return   false
             } else {
                 // No explanation needed, we can request the permission.
                 requestLocationPermission()
+                return   false
             }
         } else {
             checkBackgroundLocation()
+
         }
+        return   true
     }
 
     private fun registerObserver() {
@@ -516,7 +516,11 @@ class StartTravelFragment(
                 alertDialog.setButton("OK") { dialog, which ->
                     // Write your code here to execute after dialog closed
                     //        Toast.makeText(getApplicationContext(), "You clicked on OK", Toast.LENGTH_SHORT).show();
-
+                    alertDialog?.let {
+                        if (alertDialog.isShowing) {
+                            alertDialog.dismiss()
+                        }
+                    }
                     activity?.finish()
                     activity?.startActivity(activity?.getIntent())
                 }
@@ -589,10 +593,21 @@ class StartTravelFragment(
 
 
     private fun validate(): Boolean {
+
+        if (!Constant.isTimeAutomatic(requireContext())) {
+            msclass?.showAutomaticTimeMessage("Please update time setting to automatic")
+            return false
+        }
+
         if (binding.spvehicletype.selectedItemPosition == 0) {
             msclass?.showMessage("Please select vehicle type")
             return false
         }
+
+        if (binding.spvehicletype.selectedItem.toString() == "OTHER") {
+            return true
+        }
+
         /*  if (binding.txtlocation.text.length == 0) {
               msclass?.showMessage("Please enter correct location")
               checkLocationPermission()
@@ -607,16 +622,13 @@ class StartTravelFragment(
             return false
         }
 
-        if (!Constant.isTimeAutomatic(requireContext())) {
-            msclass?.showAutomaticTimeMessage("Please update time setting to automatic")
-            return false
-        }
+
         return true
 
     }
 
+
     private suspend fun addData() {
-        checkLocationPermission()
         llProgressBarStartTravel.visibility = View.VISIBLE
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         val currentDateTime = sdf.format(Date())
@@ -626,10 +638,17 @@ class StartTravelFragment(
         val sd = SimpleDateFormat("MM/dd/yyyy")
         val currentDate = sd.format(Date())
 
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        imageBitmap?.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
-        val byteArray = byteArrayOutputStream.toByteArray()
-        val encoded: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        var encoded: String = ""
+
+        encoded = if (binding.spvehicletype.selectedItem.toString() != "OTHER") {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            imageBitmap?.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            Base64.encodeToString(byteArray, Base64.DEFAULT)
+        } else {
+            "No Image"
+        }
+
 
         val vehicleId = Vehicle?.get(binding.spvehicletype.selectedItemPosition)?.trId
         val vehicleType =
@@ -650,10 +669,10 @@ class StartTravelFragment(
             "",
             "",
             binding.txtkm.text.toString(),
-            encoded,
+            encoded.encodeToByteArray(),
             "0",
-            "",
-            "",
+            "".toByteArray(),
+            "".toByteArray(),
             "0",
             "start",
             "",
@@ -663,7 +682,6 @@ class StartTravelFragment(
             currentDate, "0", "0"
 
         )
-
 
         //  llProgressBarStartTravel.visibility = View.GONE
 
@@ -675,12 +693,13 @@ class StartTravelFragment(
         } else {
 
             val gpsTracker = GPSTracker(context)
-            if (gpsTracker.getIsGPSTrackingEnabled()) {
+            if (gpsTracker.isGPSTrackingEnabled) {
                 latitude = gpsTracker.latitude.toString()
                 longitude = gpsTracker.longitude.toString()
 
-                if (latitude.equals("") || longitude.equals("")) {
+                if (latitude == "" || longitude == "" || longitude == "0.0" || latitude == "0.0") {
                     msclass?.showMessage("Unable to access location")
+                    checkBackgroundLocation()
                 } else {
                     addData()
                 }
@@ -695,6 +714,15 @@ class StartTravelFragment(
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (alert !=null){
+            if (alert!!.isShowing) {
+                alert!!.dismiss()
+            }
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -703,7 +731,7 @@ class StartTravelFragment(
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             MY_CAMERA_PERMISSION_CODE -> {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     if (takePictureIntent.resolveActivity(activity?.packageManager!!) != null) {
                         // Create the File where the photo should go
@@ -756,24 +784,30 @@ class StartTravelFragment(
                             }).show(this.childFragmentManager)
                     }
                 } else {
-
+                    if (alert !=null){
+                        if (alert!!.isShowing) {
+                            alert!!.dismiss()
+                        }
+                    }
                     val builder = AlertDialog.Builder(context)
                     builder.setMessage("You need to allow Camera permission to perform further operations")
                         .setCancelable(false)
                         .setPositiveButton(
                             "Allow"
                         ) { dialog, id ->
+                            dialog.dismiss()
                             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                             val uri: Uri =
                                 Uri.fromParts("package", requireContext().getPackageName(), null)
                             intent.data = uri
                             startActivity(intent)
+
                         }
                         .setNegativeButton(
                             "Deny"
                         ) { dialog, id -> }
-                    val alert = builder.create()
-                    alert.show()
+                     alert = builder.create()
+                    alert?.show()
 //                    Toast.makeText(context, "camera permission denied", Toast.LENGTH_LONG).show()
                 }
             }
@@ -793,19 +827,31 @@ class StartTravelFragment(
                     }
 
                 } else {
+                    if (alert !=null){
+                        if (alert!!.isShowing) {
+                            alert!!.dismiss()
+                        }
+                    }
+
                     val builder = AlertDialog.Builder(context)
                     builder.setMessage("You need to allow location permission to perform further operations")
                         .setCancelable(false)
                         .setPositiveButton(
                             "Allow"
                         ) { dialog, id ->
-                            requestLocationPermission()
+                            dialog.dismiss()
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri: Uri =
+                                Uri.fromParts("package", requireContext().getPackageName(), null)
+                            intent.data = uri
+                            startActivity(intent)
+
                         }
                         .setNegativeButton(
                             "Deny"
                         ) { dialog, id -> activity?.finish() }
-                    val alert = builder.create()
-                    alert.show()
+                     alert = builder.create()
+                    alert?.show()
 
                     // Check if we are in a state where the user has denied the permission and
                     // selected Don't ask again
@@ -870,6 +916,7 @@ class StartTravelFragment(
             val type: Type = object : TypeToken<List<GetVehicleTypeResponseItem?>?>() {}.type
             Vehicle = gson.fromJson(json, type)
             Vehicle.add(0, GetVehicleTypeResponseItem("0", "0", "Please select vehicle type", 0))
+            Vehicle.add(4, GetVehicleTypeResponseItem("4", "0", "OTHER", 4))
 
             val adapter: ArrayAdapter<GetVehicleTypeResponseItem> =
                 ArrayAdapter<GetVehicleTypeResponseItem>(
@@ -878,8 +925,43 @@ class StartTravelFragment(
                 )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spvehicletype.setAdapter(adapter)
+            binding.spvehicletype.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                    }
+
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        if (Vehicle[position].vehicleCode == "4" ||
+                            Vehicle[position].vehicleCode == "0"
+                        ) {
+                            imageBitmap = null
+                            binding.txtkm.setText("0")
+                            binding.ivImage.setImageBitmap(null)
+
+                            binding.txtkm.visibility = View.GONE
+                            binding.ivImage.visibility = View.GONE
+                            binding.btnTakephoto.visibility = View.GONE
+                        } else {
+
+                            imageBitmap = null
+                            binding.txtkm.setText("")
+                            binding.ivImage.setImageBitmap(null)
+
+                            binding.txtkm.visibility = View.VISIBLE
+                            binding.ivImage.visibility = View.VISIBLE
+                            binding.btnTakephoto.visibility = View.VISIBLE
+                        }
+                    }
+
+                }
         } catch (e: Exception) {
-            Log.e("error", "intialbinddata: " + e.toString())
+//            Log.e("error", "intialbinddata: " + e.toString())
         }
     }
 
@@ -916,70 +998,11 @@ class StartTravelFragment(
         return image
     }
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAPTURE_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-
-
-            //   val bitmap = myBitmap(BitmapFactory.decodeFile(photoFile!!.absolutePath))
-
-
-            /*  if (bitmap != null) {
-                  imageBitmap = bitmap
-                  binding?.ivImage?.setImageBitmap(bitmap)
-                  _binding?.ivImage?.visibility = View.VISIBLE
-              }*/
-        } else {
-            msclass!!.showMessage("Request cancelled or something went wrong.")
-        }
-    }
-
-    private fun myBitmap(bitmap: Bitmap?): Bitmap {
-        /*   val ei = ExifInterface(photoFile!!.absolutePath)
-           val orientation: Int = ei.getAttributeInt(
-               ExifInterface.TAG_ORIENTATION,
-               ExifInterface.ORIENTATION_UNDEFINED
-           )
-
-           var rotatedBitmap: Bitmap? = null
-           rotatedBitmap = when (orientation) {
-               ExifInterface.ORIENTATION_ROTATE_90 -> bitmap?.let {
-                   rotateImage(
-                       it, 90
-                   )
-               }
-               ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap!!, 180)
-               ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap!!, 270)
-               ExifInterface.ORIENTATION_NORMAL -> bitmap
-               else -> bitmap
-           }
-   */
-        val width = bitmap?.width
-        val height = bitmap?.height
-
-        val scaleWidth = width!! / 10
-        val scaleHeight = height?.div(10)
-
-        if (bitmap != null) {
-            if (bitmap.byteCount <= 1000000)
-                return bitmap
-        }
-
-        return Bitmap.createScaledBitmap(bitmap, scaleWidth, scaleHeight!!, false)
-
-    }
-
-
     override fun onResume() {
         super.onResume()
-        if (isLocationEnabled(requireContext())) {
-            //setListner()
-//            checkLocationPermission()
-
-        }
-
-
+       /* if (Constant.isLocationEnabled(requireContext())) {
+          //  setListner()
+        }*/
     }
 
     override val coroutineContext: CoroutineContext

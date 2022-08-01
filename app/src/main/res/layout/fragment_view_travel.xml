@@ -48,11 +48,12 @@
                     android:paddingHorizontal="@dimen/dp_10"
                     android:textColor="@color/black" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="@dimen/dp_5"
+                android:orientation="horizontal"
                 android:weightSum="2">
 
                 <TextView
@@ -116,6 +117,7 @@
                     android:paddingHorizontal="@dimen/dp_10"
                     android:textColor="@color/black" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,6 +126,7 @@
                 android:weightSum="2">
 
                 <TextView
+                    android:id="@+id/startKmText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -138,6 +141,7 @@
                     android:paddingHorizontal="@dimen/dp_10"
                     android:textColor="@color/black" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -160,6 +164,7 @@
                     android:paddingHorizontal="@dimen/dp_10"
                     android:textColor="@color/black" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -168,6 +173,7 @@
                 android:weightSum="2">
 
                 <TextView
+                    android:id="@+id/endKmText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -182,97 +188,111 @@
                     android:paddingHorizontal="@dimen/dp_10"
                     android:textColor="@color/black" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:weightSum="2"
-                android:layout_marginTop="@dimen/dp_5"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text="Start Location - "
-                    android:paddingHorizontal="@dimen/dp_10"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:textColor="@color/black"
-                    android:id="@+id/textViewStartLocation"
-                    android:paddingHorizontal="@dimen/dp_10"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:weightSum="2"
-                android:layout_marginTop="@dimen/dp_5"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:text="End Location - "
-                    android:paddingHorizontal="@dimen/dp_10"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:textColor="@color/black"
-                    android:id="@+id/textViewEndLocation"
-                    android:paddingHorizontal="@dimen/dp_10"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:weightSum="2"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/dp_5"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    android:text="Start Location - " />
+
+                <TextView
+                    android:id="@+id/textViewStartLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    android:text="End Location - " />
+
+                <TextView
+                    android:id="@+id/textViewEndLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="@dimen/dp_10"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:gravity="center_horizontal"
                     android:layout_weight="1"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
+
                     <TextView
+                        android:id="@+id/startImageText"
                         android:layout_width="match_parent"
-                        android:text="Start Image"
+                        android:layout_height="wrap_content"
                         android:gravity="start"
                         android:paddingHorizontal="@dimen/dp_10"
-                        android:layout_height="wrap_content"/>
+                        android:text="Start Image" />
+
                     <ImageView
+                        android:id="@+id/imageViewStart"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:id="@+id/imageViewStart"
-                        android:layout_marginTop="@dimen/dp_5"
-                        />
+                        android:layout_marginTop="@dimen/dp_5" />
 
                 </LinearLayout>
+
                 <View
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
-                    android:background="#c5c3c3"/>
+                    android:background="#c5c3c3" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginTop="@dimen/dp_10"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
+
                     <TextView
+                        android:id="@+id/endImageText"
                         android:layout_width="match_parent"
-                        android:text="End Image"
+                        android:layout_height="wrap_content"
                         android:gravity="start"
                         android:paddingHorizontal="@dimen/dp_10"
-                        android:layout_height="wrap_content"/>
+                        android:text="End Image" />
+
                     <ImageView
+                        android:id="@+id/imageViewEnd"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:id="@+id/imageViewEnd"
-                        android:layout_marginTop="@dimen/dp_5"
-                        />
+                        android:layout_marginTop="@dimen/dp_5" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -281,23 +301,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginVertical="2dp"
-                android:background="#C5C3C3"/>
+                android:background="#C5C3C3" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_5"
                 android:gravity="center_horizontal"
                 android:text="Event Details"
-                android:layout_marginTop="@dimen/dp_5"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp_18"
                 android:textStyle="bold" />
 
             <ExpandableListView
+                android:id="@+id/expendableList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="2dp"
-                android:nestedScrollingEnabled="false"
-                android:id="@+id/expendableList"/>
+                android:nestedScrollingEnabled="false" />
         </LinearLayout>
 
     </ScrollView>

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.multidex.MultiDex
 import com.example.android.roomwordssample.WordRepository
 import com.example.android.roomwordssample.WordRoomDatabase
 import com.mahyco.cmr_app.core.Constant
@@ -69,5 +70,10 @@ class MainApplication : Application() {
     fun getLMainResponse():LeegalityMainResponse{
         DLog.d("GET LeegalityMainResponse : =====================\n$leegalityMainResponse")
         return  leegalityMainResponse
+    }
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this);
     }
 }

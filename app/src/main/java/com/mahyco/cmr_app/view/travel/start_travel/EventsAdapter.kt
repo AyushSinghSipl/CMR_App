@@ -14,7 +14,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.android.roomwordssample.Word
 import com.mahyco.cmr_app.R
-import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 import java.text.SimpleDateFormat
 
 class EventsAdapter(val context:Context,val items: List<Word> ) : BaseExpandableListAdapter() {
@@ -64,7 +63,7 @@ class EventsAdapter(val context:Context,val items: List<Word> ) : BaseExpandable
         expandedListTextViewEventDateTime.text = date
         expandedListTextViewEventDiscription.text = event.uEventDescription
 
-        if (event.uKmImageEvent != null && event.uKmImageEvent != ""){
+        if (event.uKmImageEvent != null && event.uKmImageEvent.size != 0){
             val decodedStringEnd: ByteArray = Base64.decode(event.uKmImageEvent, Base64.DEFAULT)
             val decodedByteEnd: Bitmap =
                 BitmapFactory.decodeByteArray(decodedStringEnd, 0, decodedStringEnd.size)

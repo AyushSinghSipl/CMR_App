@@ -1,12 +1,16 @@
 package com.mahyco.cmr_app.view
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.View
@@ -15,7 +19,9 @@ import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.example.android.roomwordssample.WordViewModel
 import com.mahyco.cmr_app.MainActivity
 import com.mahyco.cmr_app.R
 import com.mahyco.cmr_app.core.BaseActivity
@@ -30,14 +36,15 @@ import com.mahyco.rcbucounterboys2020.utils.SharedPreference
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.*
 
+
 class LoginActivity : BaseActivity() {
 
     lateinit var context: Context
-    var signUpViewModel: SignUpViewModel? = null
+    lateinit var signUpViewModel: SignUpViewModel
     var device_Unique_id = ""
     var msclass: Messageclass? = null
+private val  PERMISSION_CODE = 3000
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -47,9 +54,7 @@ class LoginActivity : BaseActivity() {
         msclass = Messageclass(this)
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getDeviceIMEI()
-        }
         registerObserver()
         setUI()
 
@@ -58,30 +63,95 @@ class LoginActivity : BaseActivity() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("NewApi")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_CODE ->{
+
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    var IMEINumber = ""
+                    try {
+                        val telephonyManager = getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+
+                        IMEINumber = telephonyManager.imei
+
+                        device_Unique_id = IMEINumber
+                    }
+                    catch (e: Exception) {
+                        e.localizedMessage
+                        val uniquePseudoID =
+                            "35" + Build.BOARD.length % 10 + Build.BRAND.length % 10 + Build.DEVICE.length % 10 + Build.DISPLAY.length % 10 + Build.HOST.length % 10 + Build.ID.length % 10 + Build.MANUFACTURER.length % 10 + Build.MODEL.length % 10 + Build.PRODUCT.length % 10 + Build.TAGS.length % 10 + Build.TYPE.length % 10 + Build.USER.length % 10
+                        val serial = Build.getRadioVersion()
+                        val uuid: String =
+                            UUID(uniquePseudoID.hashCode().toLong(), serial.hashCode().toLong()).toString()
+                        val brand = Build.BRAND
+                        val modelno = Build.MODEL
+                        val version = Build.VERSION.RELEASE
+                        device_Unique_id = uuid
+                        Log.e(
+                            "IMEI", """fetchDeviceInfo: 
+ uuid is : $uuid
+ brand is: $brand
+ model is: $modelno
+ version is: $version"""
+                        )
+                    }
+                }else{
+                    val builder = AlertDialog.Builder(context)
+                    builder.setMessage("You need to allow Read phone state permission to perform further operations")
+                        .setCancelable(false)
+                        .setPositiveButton(
+                            "Allow"
+                        ) { dialog, id ->
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            val uri: Uri =
+                                Uri.fromParts("package", getPackageName(), null)
+                            intent.data = uri
+                            startActivity(intent)
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton(
+                            "Deny"
+                        ) { dialog, id -> }
+                    val alert = builder.create()
+                    alert.show()
+                }
+            }
+        }
+    }
+    @SuppressLint("NewApi")
     fun getDeviceIMEI() {
+
         val telephonyManager = getSystemService(TELEPHONY_SERVICE) as TelephonyManager
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_PHONE_STATE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_PHONE_STATE),
-                3000
-            )
-            return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_PHONE_STATE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.READ_PHONE_STATE),
+                    PERMISSION_CODE
+                )
+                return
+            }
         }
         var IMEINumber = ""
         try {
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 IMEINumber = telephonyManager.imei
-            }
+
             device_Unique_id = IMEINumber
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
+            e.localizedMessage
             val uniquePseudoID =
                 "35" + Build.BOARD.length % 10 + Build.BRAND.length % 10 + Build.DEVICE.length % 10 + Build.DISPLAY.length % 10 + Build.HOST.length % 10 + Build.ID.length % 10 + Build.MANUFACTURER.length % 10 + Build.MODEL.length % 10 + Build.PRODUCT.length % 10 + Build.TAGS.length % 10 + Build.TYPE.length % 10 + Build.USER.length % 10
             val serial = Build.getRadioVersion()
@@ -93,7 +163,6 @@ class LoginActivity : BaseActivity() {
             device_Unique_id = uuid
             Log.e(
                 "IMEI", """fetchDeviceInfo: 
- 
  uuid is : $uuid
  brand is: $brand
  model is: $modelno
@@ -104,31 +173,11 @@ class LoginActivity : BaseActivity() {
         //  return IMEINumber
     }
 
-    private fun fetchDeviceInfo() {
-        val uniquePseudoID =
-            "35" + Build.BOARD.length % 10 + Build.BRAND.length % 10 + Build.DEVICE.length % 10 + Build.DISPLAY.length % 10 + Build.HOST.length % 10 + Build.ID.length % 10 + Build.MANUFACTURER.length % 10 + Build.MODEL.length % 10 + Build.PRODUCT.length % 10 + Build.TAGS.length % 10 + Build.TYPE.length % 10 + Build.USER.length % 10
-        val serial = Build.getRadioVersion()
-        val uuid: String =
-            UUID(uniquePseudoID.hashCode().toLong(), serial.hashCode().toLong()).toString()
-        val brand = Build.BRAND
-        val modelno = Build.MODEL
-        val version = Build.VERSION.RELEASE
-        device_Unique_id = uuid
-        Log.e(
-            "IMEI", """fetchDeviceInfo: 
- uuid is : $uuid
- brand is: $brand
- model is: $modelno
- version is: $version"""
-        )
-    }
-
     fun saveUserCode(context: Context, token: String?) {
         val empCode = "" + token
         EncryptDecryptManager.saveUserCodeWithEncryption(empCode, context)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun setUI() {
 
         supportActionBar?.title = getString(R.string.app_name_long)
@@ -151,10 +200,12 @@ class LoginActivity : BaseActivity() {
         })
 
         btn_login.setOnClickListener(View.OnClickListener {
-            // saveUserCode(context)
-//            logLoginEvent();
-            if (validateData()) {
-                callLogin()
+            if (Constant.isNetworkConnected(this)) {
+                if (validateData()) {
+                    callLogin()
+                }
+            }else{
+                msclass?.showMessage("No internet connection found")
             }
         })
         try {
@@ -169,7 +220,6 @@ class LoginActivity : BaseActivity() {
         requestToken()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun validateData(): Boolean {
         if (edt_emp_code.text.toString() == "") {
             msclass?.showMessage("Please enter emp code")
@@ -196,9 +246,6 @@ class LoginActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getDeviceIMEI()
-        }
     }
 
     private fun requestToken() {

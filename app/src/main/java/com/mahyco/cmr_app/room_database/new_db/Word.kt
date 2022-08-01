@@ -21,6 +21,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.android.gms.maps.model.LatLng
+import java.sql.Blob
 
 /**
  * A basic class representing an entity that is a row in a one-column database table.
@@ -49,10 +50,14 @@ data class Word(
     @ColumnInfo(name = "uEventLat") val uEventLat: String,
     @ColumnInfo(name = "uEventLng") val uEventLng: String,
     @ColumnInfo(name = "uReadingStart") val uKmReadingStart: String,
-    @ColumnInfo(name = "uImageStart") val uKmImageStart: String,
+//    @ColumnInfo(name = "uImageStart") val uKmImageStart: Blob,
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB) var uKmImageStart: ByteArray,
     @ColumnInfo(name = "uReadingEnd") val uKmReadingEnd: String,
-    @ColumnInfo(name = "uImageEnd") val uKmImageEnd: String,
-    @ColumnInfo(name = "uKmImageEvent") val uKmImageEvent: String,
+//    @ColumnInfo(name = "uImageEnd") val uKmImageEnd: Blob,
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB) var uKmImageEnd: ByteArray,
+
+//    @ColumnInfo(name = "uKmImageEvent") val uKmImageEvent: Blob,
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB) var uKmImageEvent: ByteArray,
     @ColumnInfo(name = "uStatus") var uStatus: String,
     @ColumnInfo(name = "uType") val uType: String,
     @ColumnInfo(name = "uEventType") val uEventType: String,

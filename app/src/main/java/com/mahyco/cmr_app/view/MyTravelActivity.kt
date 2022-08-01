@@ -1,13 +1,10 @@
 package com.mahyco.cmr_app.view
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
@@ -24,7 +21,6 @@ import com.google.gson.Gson
 import com.mahyco.cmr_app.R
 import com.mahyco.cmr_app.core.BaseActivity
 import com.mahyco.cmr_app.core.Constant
-import com.mahyco.cmr_app.core.DLog
 import com.mahyco.cmr_app.core.Messageclass
 import com.mahyco.cmr_app.view.travel.start_travel.AddEvenFragment
 import com.mahyco.cmr_app.view.travel.start_travel.EndTravelFragment
@@ -32,7 +28,6 @@ import com.mahyco.cmr_app.view.travel.start_travel.StartTravelFragment
 import com.mahyco.cmr_app.view.travel.start_travel.ViewTravelFragment
 import com.mahyco.cmr_app.viewmodel.CMRDataViewModel
 import com.mahyco.isp.core.MainApplication
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_my_travel.*
 import kotlinx.android.synthetic.main.activity_my_travel.llProgressBar
 import kotlinx.android.synthetic.main.activity_my_travel.textViewVersionName
@@ -76,6 +71,7 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         context = this
         //  setUI()
+//        Log.d("TAG", "onCreate: mytravel")
         CoroutineScope(Main).launch {
             llProgressBar.visibility = View.VISIBLE
             checkData()
@@ -87,7 +83,7 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         msclass = Messageclass(this)
 
         buttonUploadData.setOnClickListener {
-            if (isNetworkConnected()) {
+            if (Constant.isNetworkConnected(this)) {
                 syncData()
             } else {
                 msclass?.showMessage("Internet not connected")
@@ -108,16 +104,18 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
 
     override fun onResume() {
         super.onResume()
+//        Log.d("Mytravel", "onResume: ")
         if (!Constant.isTimeAutomatic(this)) {
             msclass?.showAutomaticTimeMessage("Please update time setting to automatic")
         }
+
+       /* CoroutineScope(Main).launch {
+            llProgressBar.visibility = View.VISIBLE
+            checkData()
+        }*/
     }
 
-    @SuppressLint("ServiceCast")
-    private fun isNetworkConnected(): Boolean {
-        val cm: ConnectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo()!!.isConnected()
-    }
+
 
     private suspend fun checkData() {
         val sd = SimpleDateFormat("MM/dd/yyyy")
@@ -130,7 +128,7 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
                 fragment_List.clear()
                 fragmentTitle.clear()
                 fragmentTitle.add("View Travel")
-                fragment_List.add(ViewTravelFragment(wordViewModel))
+                fragment_List.add(ViewTravelFragment())
                 setupViewPager(viewcontainer)
 
                 llProgressBar.visibility = View.GONE
@@ -138,34 +136,11 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
             }
         }
 
-        /* wordViewModel.getCurrentDateTravelType(currentDate,"end")
-             .observe(owner = this) { words ->
-             // Update the cached copy of the words in the adapter.
-             words.let {
-                 Log.e("end", "onCreateView: " + it)
-             }
-                 for (item in eventList) {
-                     if (item.uType == "end") {
-                         msclass?.showMessage("Tour is completed for today")
-
-                         fragment_List.clear()
-                         fragmentTitle.clear()
-                         fragmentTitle.add("View Travel")
-                         fragment_List.add(ViewTravelFragment(wordViewModel))
-                         setupViewPager(viewcontainer)
-
-                         llProgressBar.visibility = View.GONE
-                         return@observe
-                     }
-                 }
-
-         }
- */
         eventList.clear()
         eventList = wordViewModel.getCurrentTravel(currentDate) as MutableList<Word>
         if (eventList != null && eventList.size != 0) {
 
-            for (item in eventList) {
+          /*  for (item in eventList) {
                 if (item.uType == "end") {
 //                    textTravelComplete.visibility = View.VISIBLE
                     msclass?.showMessage("Tour is completed for today")
@@ -189,8 +164,42 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
                     llProgressBar.visibility = View.GONE
                     //   return
                 }
+            }*/
+            var isAddEventPresent = true
+
+            for (item in eventList) {
+                if (item.uType == "end") {
+                    isAddEventPresent = false
+                    break
+                }
             }
 
+//            Log.e("temporary", "checkData() isAddEventPresent $isAddEventPresent")
+            if (!isAddEventPresent) {
+//                    textTravelComplete.visibility = View.VISIBLE
+//                Log.e("temporary", "checkData() View Travel added")
+                msclass?.showMessage("Tour is completed for today")
+                fragment_List.clear()
+                fragmentTitle.clear()
+                fragmentTitle.add("View Travel")
+                fragment_List.add(ViewTravelFragment())
+                setupViewPager(viewcontainer)
+
+                llProgressBar.visibility = View.GONE
+                return
+            } else {
+//                Log.e("temporary", "checkData() item.uType != end")
+                fragment_List.clear()
+                fragmentTitle.clear()
+                fragmentTitle.add("Add Event")
+                fragmentTitle.add("End Travel")
+
+                fragment_List.add(AddEvenFragment())
+                fragment_List.add(EndTravelFragment())
+                setupViewPager(viewcontainer)
+                llProgressBar.visibility = View.GONE
+                //   return
+            }
         } else {
             fragment_List.clear()
             fragmentTitle.clear()
@@ -210,35 +219,17 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         update = true
         tourList.clear()
 
-
-        /*  wordViewModel.getTravelType("start")
-              .observe(owner = this) { words ->
-                  // Update the cached copy of the words in the adapter.
-                  words.let {
-                      Log.e("end", "onCreateView: " + it.size)
-                  }
-                  tourList.addAll(words)
-                  if (tourList.size != 0) {
-                      if (update) {
-                          cmrDataViewModel?.postTourEventDataAPI(tourList)
-                      }
-                      val sd = SimpleDateFormat("MM/dd/yyyy")
-                      val currentDate = sd.format(Date())
-
-                  }
-              }
-  */
         GlobalScope.launch {
             val listTourEvent = wordViewModel.allWords()
             val gson = Gson()
             val json = gson.toJson(listTourEvent)
-            Log.d("allData", "syncData: " + json)
+//            Log.d("allData", "syncData: " + json)
         }
         wordViewModel.getNotTravelType("start")
             .observe(owner = this) { words ->
                 // Update the cached copy of the words in the adapter.
                 words.let {
-                    Log.e("end", "onCreateView: " + it.size)
+//                    Log.e("end", "onCreateView: " + it.size)
                 }
                 tourList.addAll(words)
                 if (tourList.size != 0) {
@@ -251,8 +242,8 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
                 }
             }
 
-        Log.d("MyTravels", "syncData() called tourists " + tourList.size)
-        Log.d("MyTravels", "syncData() called events " + eventList.size)
+//        Log.d("MyTravels", "syncData() called tourists " + tourList.size)
+//        Log.d("MyTravels", "syncData() called events " + eventList.size)
 
 
     }
@@ -275,13 +266,13 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         cmrDataViewModel!!.errorLiveData.observe(this, Observer {
             if (it != null) {
                 showShortMessage(it)
-                DLog.d("CMR errorLiveData :" + it)
+//                DLog.d("CMR errorLiveData :" + it)
             }
         })
 
         cmrDataViewModel!!.postTourEventsdata.observe(this, Observer {
             var result = it.toString()
-            DLog.d("CMR DATA Activity : " + result)
+//            DLog.d("CMR DATA Activity : " + result)
             if (it.status == "Success") {
                 update = false
                 val events: MutableList<Word> = ArrayList()
@@ -371,15 +362,6 @@ class MyTravelActivity : BaseActivity(), ViewPager.OnPageChangeListener {
         return true
     }
 
-    private fun setupTabIcons() {
-        try {
-            tabs.getTabAt(0)?.setIcon(tabIcons[0])
-            tabs.getTabAt(1)?.setIcon(tabIcons[1])
-            tabs.getTabAt(2)?.setIcon(tabIcons[2])
-        } catch (e: Exception) {
-            Log.d("Msg", e.message!!)
-        }
-    }
 
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager, fragment_List, fragmentTitle)

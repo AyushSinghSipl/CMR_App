@@ -1,5 +1,6 @@
 package com.mahyco.cmr_app.viewmodel
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.util.Log
@@ -10,7 +11,6 @@ import com.google.gson.JsonObject
 import com.mahyco.cmr_app.R
 import com.mahyco.cmr_app.api.IDataServiceCMR
 import com.mahyco.cmr_app.core.Constant
-import com.mahyco.cmr_app.core.DLog
 import com.mahyco.cmr_app.model.getActivityType.GetActivityTypeResponseItem
 import com.mahyco.cmr_app.model.getCMRDataForValidation.GetCMRDataForValidResp
 import com.mahyco.cmr_app.model.getCMRFortyDataResp.GetCMRFortyDataResp
@@ -29,8 +29,8 @@ import com.mahyco.rcbucounterboys2020.utils.SharedPreference
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import org.json.JSONArray
-import org.json.JSONObject
+import okio.internal.commonToUtf8String
+import java.util.*
 
 
 class CMRDataViewModel(application: Application) : BaseViewModel(application) {
@@ -150,7 +150,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
         jsonboj.add("Table", jsonParam)
 
-        DLog.d("getCMRData JSON OBJ : $jsonboj")
+//        DLog.d("getCMRData JSON OBJ : $jsonboj")
         loadingLiveData.value = true
         val disposable = CompositeDisposable()
         val observable = ImplCMRDataRepo(iServiceISP).postGetCMRDataForValAPI(
@@ -178,6 +178,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
         disposable.add(dispose)
     }
 
+    @SuppressLint("NewApi")
     fun postTourEventDataAPI(
         eventList: MutableList<Word>
     ) {
@@ -193,12 +194,36 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
         for (item in eventList) {
             if (item.uStatus == "0") {
+
+
+               /*val startImage = Base64.encodeToString(item.uKmImageStart, Base64.DEFAULT)
+               val endImage = Base64.encodeToString(item.uKmImageEnd, Base64.DEFAULT)
+               val eventImage = Base64.encodeToString(item.uKmImageEvent, Base64.DEFAULT)*/
+
+                val decodedStringEvent: ByteArray =
+                    android.util.Base64.decode(item.uKmImageEvent, android.util.Base64.DEFAULT)
+
+                val eventImage = Base64.getEncoder().encodeToString(decodedStringEvent)
+
+                val decodedStringEnd: ByteArray =
+                    android.util.Base64.decode(item.uKmImageEnd, android.util.Base64.DEFAULT)
+
+                val endImage = Base64.getEncoder().encodeToString(decodedStringEnd)
+
+                val decodedStringstart: ByteArray =
+                    android.util.Base64.decode(item.uKmImageStart, android.util.Base64.DEFAULT)
+
+                val startImage = Base64.getEncoder().encodeToString(decodedStringstart)
+
+
+
+
                 val startlatlng = item.uStartLat + "," + item.uStartLng
                 val endlatlng = item.uEndLat + "," + item.uEndLng
                 val eventlatlng = item.uEventLat + "," + item.uEventLng
                 val tourEventParamItem = TourEventParamItem(
                     item.uStartDateTime,
-                    item.uKmImageEvent,
+                    eventImage,
                     item.uTourId.toInt(),
                     "1",
                     item.uVehicleId.toInt(),
@@ -206,10 +231,10 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
                     emp_id,
                     item.uId,
                     item.uEventDateTime,
-                    item.uKmImageEnd,
+                    endImage,
                     startlatlng,
                     item.uDate,
-                    item.uKmImageStart,
+                    startImage.toString(),
                     Math.round(item.uKmReadingEnd.toFloat()),
                     eventlatlng,
                     item.uEndDateTime,
@@ -277,7 +302,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
                 val eventlatlng = item.uEventLat + "," + item.uEventLng
                 val tourEventParamItem = TourEventParamItem(
                     item.uStartDateTime,
-                    item.uKmImageEvent,
+                    item.uKmImageEvent.toString(),
                     item.uTourId.toInt(),
                     "1",
                     item.uVehicleId.toInt(),
@@ -285,10 +310,10 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
                     emp_id,
                     item.uId,
                     item.uEventDateTime,
-                    item.uKmImageEnd,
+                    item.uKmImageEnd.commonToUtf8String(),
                     startlatlng,
                     item.uDate,
-                    item.uKmImageStart,
+                    item.uKmImageStart.toString(),
                     Math.round(item.uKmReadingEnd.toFloat()),
                     eventlatlng,
                     item.uEndDateTime,
@@ -365,7 +390,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
         jsonboj.add("Table", jsonParam)
 
-        DLog.d("getCMRData JSON OBJ : $jsonboj")
+//        D.d("getCMRData JSON OBJ : $jsonboj")
         loadingLiveData.value = true
         val disposable = CompositeDisposable()
         val observable = ImplCMRDataRepo(iServiceISP).postGetCMRTenData(
@@ -424,7 +449,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
         jsonboj.add("Table", jsonParam)
 
-        DLog.d("getCMRData JSON OBJ : $jsonboj")
+//        DLog.d("getCMRData JSON OBJ : $jsonboj")
         loadingLiveData.value = true
         val disposable = CompositeDisposable()
         val observable = ImplCMRDataRepo(iServiceISP).postGetCMRTwentyData(
@@ -483,7 +508,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
         jsonboj.add("Table", jsonParam)
 
-        DLog.d("getCMRData JSON OBJ : $jsonboj")
+//        DLog.d("getCMRData JSON OBJ : $jsonboj")
         loadingLiveData.value = true
         val disposable = CompositeDisposable()
         val observable = ImplCMRDataRepo(iServiceISP).postGetCMRThirtyData(
@@ -542,7 +567,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
         jsonboj.add("Table", jsonParam)
 
-        DLog.d("getCMRData JSON OBJ : $jsonboj")
+//        DLog.d("getCMRData JSON OBJ : $jsonboj")
         loadingLiveData.value = true
         val disposable = CompositeDisposable()
         val observable = ImplCMRDataRepo(iServiceISP).postGetCMRFortyData(
@@ -602,7 +627,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
         jsonboj.add("Table", jsonParam)
 
-        DLog.d("getCMRData JSON OBJ : $jsonboj")
+//        DLog.d("getCMRData JSON OBJ : $jsonboj")
         loadingLiveData.value = true
         val disposable = CompositeDisposable()
         val observable = ImplCMRDataRepo(iServiceISP).postGetCMRFortyData(
@@ -666,7 +691,7 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
 
         jsonboj.add("Table", jsonParam)
 
-        DLog.d("getCMRData JSON OBJ : $jsonboj")
+//        DLog.d("getCMRData JSON OBJ : $jsonboj")
         loadingLiveData.value = true
         val disposable = CompositeDisposable()
         val observable = ImplCMRDataRepo(iServiceISP).postMoStaffWiserGrowerReport(

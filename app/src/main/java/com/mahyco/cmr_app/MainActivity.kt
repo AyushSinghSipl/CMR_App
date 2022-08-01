@@ -5,43 +5,29 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.telephony.TelephonyManager
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.android.roomwordssample.Word
 import com.example.android.roomwordssample.WordViewModel
 import com.example.android.roomwordssample.WordViewModelFactory
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener
-import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.InstallStatus
-import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.tasks.Task
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
 import com.mahyco.cmr_app.core.BaseActivity
 import com.mahyco.cmr_app.core.Constant
-import com.mahyco.cmr_app.core.DLog
 import com.mahyco.cmr_app.core.Messageclass
 import com.mahyco.cmr_app.model.getActivityType.GetActivityTypeResponseItem
 import com.mahyco.cmr_app.model.getVehicleTypeResponse.GetVehicleTypeResponseItem
@@ -53,7 +39,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.jsoup.Jsoup
 import java.lang.reflect.Type
 
 
@@ -85,9 +70,7 @@ class MainActivity : BaseActivity() {
         registerObserver()
         msclass = Messageclass(this)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getDeviceIMEI()
-        }
+
 
 //        checkNewAppVersionState()
 
@@ -104,37 +87,6 @@ class MainActivity : BaseActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun getDeviceIMEI() {
-        val telephonyManager = getSystemService(TELEPHONY_SERVICE) as TelephonyManager
-        if (ActivityCompat.checkSelfPermission(
-                this@MainActivity,
-                Manifest.permission.READ_PHONE_STATE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this@MainActivity,
-                arrayOf(Manifest.permission.READ_PHONE_STATE),
-                REQUEST_CODE
-            )
-            return
-        }
-        var IMEINumber = ""
-        try {
-
-
-            IMEINumber = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                telephonyManager.imei
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
-        } catch (e: Exception) {
-            /*IMEINumber =
-               telephonyManager.deviceId*/
-        }
-        Log.e("IMEI", "onCreate: " + IMEINumber)
-        //  return IMEINumber
-    }
 
 
     private fun registerObserver() {
@@ -155,19 +107,19 @@ class MainActivity : BaseActivity() {
         cmrDataViewModel!!.errorLiveData.observe(this, Observer {
             if (it != null) {
                 showShortMessage(it)
-                DLog.d("CMR errorLiveData :" + it)
+//                DLog.d("CMR errorLiveData :" + it)
             }
         })
 
 
         cmrDataViewModel!!.getVehicleTypeData.observe(this, Observer {
             var result = it.toString()
-            DLog.d("CMR DATA Response : " + result)
+//            DLog.d("CMR DATA Response : " + result)
         })
 
         cmrDataViewModel!!.getActivityTypeData.observe(this, Observer {
             var result = it.toString()
-            DLog.d("CMR DATA Activity : " + result)
+//            DLog.d("CMR DATA Activity : " + result)
         })
         cmrDataViewModel!!.postTourEventsdata.observe(this, Observer {
             var result = it.toString()
@@ -180,128 +132,6 @@ class MainActivity : BaseActivity() {
         super.onResume()
         uploaded = true
         //    checkNewAppVersionState()
-    }
-
-
-    private fun checkForAppUpdate() {
-        // Creates instance of the manager.
-        appUpdateManager = AppUpdateManagerFactory.create(this)
-
-        // Returns an intent object that you use to check for an update.
-        val appUpdateInfoTask: Task<AppUpdateInfo> = appUpdateManager!!.appUpdateInfo
-
-        // Create a listener to track request state updates.
-        installStateUpdatedListener =
-            InstallStateUpdatedListener { installState ->
-                // Show module progress, log state, or install the update.
-                if (installState.installStatus() == InstallStatus.DOWNLOADED) // After the update is downloaded, show a notification
-                // and request user confirmation to restart the app.
-                    popupSnackbarForCompleteUpdateAndUnregister()
-            }
-
-        // Checks that the platform will allow the specified type of update.
-        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() === UpdateAvailability.UPDATE_AVAILABLE) {
-                // Request the update.
-                if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-
-                    // Before starting an update, register a listener for updates.
-                    appUpdateManager!!.registerListener(installStateUpdatedListener!!)
-                    // Start an update.
-                    startAppUpdateFlexible(appUpdateInfo)
-                } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
-                    // Start an update.
-                    startAppUpdateImmediate(appUpdateInfo)
-                }
-            }
-        }
-    }
-
-    private fun startAppUpdateImmediate(appUpdateInfo: AppUpdateInfo) {
-        try {
-            appUpdateManager!!.startUpdateFlowForResult(
-                appUpdateInfo,
-                AppUpdateType.IMMEDIATE,  // The current activity making the update request.
-                this,  // Include a request code to later monitor this update request.
-                REQ_CODE_VERSION_UPDATE
-            )
-        } catch (e: IntentSender.SendIntentException) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun startAppUpdateFlexible(appUpdateInfo: AppUpdateInfo) {
-        try {
-            appUpdateManager!!.startUpdateFlowForResult(
-                appUpdateInfo,
-                AppUpdateType.FLEXIBLE,  // The current activity making the update request.
-                this,  // Include a request code to later monitor this update request.
-                REQ_CODE_VERSION_UPDATE
-            )
-        } catch (e: IntentSender.SendIntentException) {
-            e.printStackTrace()
-//            unregisterInstallStateUpdListener()
-        }
-    }
-
-    /**
-     * Displays the snackbar notification and call to action.
-     * Needed only for Flexible app update
-     */
-    private fun popupSnackbarForCompleteUpdateAndUnregister() {
-        val snackbar = Snackbar.make(
-            relativeLayout,
-            getString(R.string.update_downloaded),
-            Snackbar.LENGTH_INDEFINITE
-        )
-        snackbar.setAction(R.string.restart,
-            View.OnClickListener { appUpdateManager!!.completeUpdate() })
-        snackbar.setActionTextColor(resources.getColor(R.color.colorPrimary))
-        snackbar.show()
-    }
-
-    /**
-     * Checks that the update is not stalled during 'onResume()'.
-     * However, you should execute this check at all app entry points.
-     */
-
-    private fun checkNewAppVersionState() {
-        try {
-
-            AsyncTask.execute(Runnable {
-                val newVersion =
-                    Jsoup.connect("https://play.google.com/store/apps/details?id=com.mahyco.cmr_app&hl=it")
-                        .timeout(30000)
-                        .userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-                        .referrer("http://www.google.com")
-                        .get()
-                        .select(".hAyfc .htlgb")
-                        .get(7)
-                        .ownText()
-                Toast.makeText(this@MainActivity, newVersion.toString(), Toast.LENGTH_SHORT).show()
-            })
-        } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
-        }
-
-        /* appUpdateManager
-             ?.getAppUpdateInfo()
-             ?.addOnSuccessListener { appUpdateInfo: AppUpdateInfo ->
-                 //FLEXIBLE:
-                 // If the update is downloaded but not installed,
-                 // notify the user to complete the update.
-                 if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
-                     popupSnackbarForCompleteUpdateAndUnregister()
-                 }
-
-                 //IMMEDIATE:
-                 if (appUpdateInfo.updateAvailability()
-                     == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                 ) {
-                     // If an in-app update is already running, resume the update.
-                     startAppUpdateImmediate(appUpdateInfo)
-                 }
-             }*/
     }
 
 
@@ -447,7 +277,8 @@ class MainActivity : BaseActivity() {
                         })
                     .setNegativeButton("Cancel", null)
                     .show()
-            } else {
+            }
+            else {
                 val sharedPreference: SharedPreference = SharedPreference(this)
                 val gson = Gson()
                 val jsonVehicle: String =
@@ -507,7 +338,7 @@ class MainActivity : BaseActivity() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(
-                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION),
                 Companion.MY_PERMISSIONS_REQUEST_LOCATION
             )
         }
@@ -564,7 +395,7 @@ class MainActivity : BaseActivity() {
 
         when (requestCode) {
             REQ_CODE_VERSION_UPDATE -> if (resultCode != RESULT_OK) { //RESULT_OK / RESULT_CANCELED / RESULT_IN_APP_UPDATE_FAILED
-                Log.d("update listner", "Update flow failed! Result code: $resultCode")
+//                Log.d("update listner", "Update flow failed! Result code: $resultCode")
                 // If the update is cancelled or fails,
                 // you can request to start the update again.
 //                unregisterInstallStateUpdListener()
@@ -611,6 +442,7 @@ class MainActivity : BaseActivity() {
                 /* Toast.makeText(applicationContext, "Logout option coming soon", Toast.LENGTH_LONG)
                      .show()*/
                 CoroutineScope(Dispatchers.Main).launch {
+                    llProgressBar.visibility = View.VISIBLE
                     tourList.clear()
                     tourList = wordViewModel.allWords() as MutableList<Word>
                     if (tourList != null || tourList.size != 0) {
@@ -618,12 +450,13 @@ class MainActivity : BaseActivity() {
                         for (item in tourList) {
 
                             if (item.uStatus != "1") {
-                                Log.e(
+                             /*   Log.e(
                                     "add_event",
                                     "onOptionsItemSelected: " + item.uId + " - status: " + item.uStatus
-                                )
+                                )*/
                                 uploaded = false
                                 msclass?.showMessage("Please end tour and upload data before logout !")
+                                llProgressBar.visibility = View.GONE
                                 break
                                 return@launch
                             }
@@ -643,7 +476,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun logout() {
-
+        llProgressBar.visibility = View.GONE
         val alertDialog = AlertDialog.Builder(this).create()
         alertDialog.setTitle("Are you sure you want to logout")
         alertDialog.setMessage("* Logout may wipe your travel and event data")
@@ -653,6 +486,8 @@ class MainActivity : BaseActivity() {
         alertDialog.setButton("Logout") { dialog, which ->
             // Write your code here to execute after dialog closed
             //        Toast.makeText(getApplicationContext(), "You clicked on OK", Toast.LENGTH_SHORT).show();
+
+
             CoroutineScope(Dispatchers.Main).launch {
                 wordViewModel.clearAll()
                 val sharedPreference: SharedPreference = SharedPreference(applicationContext)
