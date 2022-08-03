@@ -92,6 +92,7 @@ class EndTravelFragment() : Fragment() {
     var imageBitmap: Bitmap? = null
     var longitude = ""
     private var is_visible = false
+    var insert = false
 
     var alert: AlertDialog? = null
 
@@ -176,6 +177,7 @@ class EndTravelFragment() : Fragment() {
         cmrDataViewModel!!.errorLiveData.observe(this, androidx.lifecycle.Observer {
             if (it != null) {
                 Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+                insert = false
 //                DLog.d("CMR errorLiveData :" + it)
             }
         })
@@ -247,6 +249,7 @@ class EndTravelFragment() : Fragment() {
                 }
                 alertDialog.show()
             } else {
+                insert = false
                 if (!it.errorMessage.toString().equals("null")) {
                     msclass?.showMessage(it.errorMessage.toString())
                 } else {
@@ -305,35 +308,43 @@ class EndTravelFragment() : Fragment() {
                             }
                         }
                     }
+
                 wordViewModel.getCurrentDateTravelType(currentDate, "end")
                     .observe(owner = this) { words ->
                         // Update the cached copy of the words in the adapter.
                         words.let {
 //                            Log.e("end", "onCreateView: " + it)
                         }
-                        if (words != null && words.size != 0) {
-                            if (is_visible) {
-                                tourEnded = true
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    if (Constant.isNetworkConnected(requireContext())) {
-                                        try {
-                                            val tourList: MutableList<Word> =
-                                                wordViewModel.allWords() as MutableList<Word>
-                                            if (tourList.size != 0) {
-                                                cmrDataViewModel?.postTourEventDataAPI(tourList)
+                        if (!insert) {
+                            if (words != null && words.size != 0) {
+                                if (is_visible) {
+                                    tourEnded = true
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        if (Constant.isNetworkConnected(requireContext())) {
+                                            try {
+                                                val tourList: MutableList<Word> =
+                                                    wordViewModel.allWords() as MutableList<Word>
+                                                if (tourList.size != 0) {
+                                                    if (!insert) {
+                                                        cmrDataViewModel?.postTourEventDataAPI(
+                                                            tourList
+                                                        )
+                                                        insert = true
+                                                    }
 
-                                            }
-                                        } catch (e: Exception) {
+                                                }
+                                            } catch (e: Exception) {
 //                                            Log.e("Internet error", "checkData: ")
-                                        }
+                                            }
 
-                                    } else {
-                                        val alertDialogEnd = AlertDialog.Builder(context).create()
-                                        alertDialogEnd.setTitle("Crop Monitor Report")
-                                        alertDialogEnd.setCancelable(false)
-                                        alertDialogEnd.setMessage("Tour is ended for today")
-                                        alertDialogEnd.setButton("OK") { dialog, which ->
-                                            /* CoroutineScope(Dispatchers.Main).launch {
+                                        } else {
+                                            val alertDialogEnd =
+                                                AlertDialog.Builder(context).create()
+                                            alertDialogEnd.setTitle("Crop Monitor Report")
+                                            alertDialogEnd.setCancelable(false)
+                                            alertDialogEnd.setMessage("Tour is ended for today")
+                                            alertDialogEnd.setButton("OK") { dialog, which ->
+                                                /* CoroutineScope(Dispatchers.Main).launch {
                                             *//* if (isNetworkConnected()) {
                                         val tourList: MutableList<Word> =
                                             wordViewModel.allWords() as MutableList<Word>
@@ -345,24 +356,25 @@ class EndTravelFragment() : Fragment() {
                                     activity?.finish()
                                     startActivity(activity?.getIntent())
                                 }*/
-                                            activity?.finish()
-                                            startActivity(activity?.getIntent())
+                                                activity?.finish()
+                                                startActivity(activity?.getIntent())
 
-                                        }
-                                        if (!alertDialogEnd.isShowing) {
-                                            alertDialogEnd.show()
+                                            }
+                                            if (!alertDialogEnd.isShowing) {
+                                                alertDialogEnd.show()
+                                            }
                                         }
                                     }
-                                }
 
 
-                                /* showDialog(
+                                    /* showDialog(
                                 "Tour already ended for today",
                                 "Tour cycle is ended for today please comeback next day"
                             )*/
-                                binding.btnstUpdate.isEnabled = false
-                                // binding.btnstUpdate.visibility = View.GONE
-                                return@observe
+                                    binding.btnstUpdate.isEnabled = false
+                                    // binding.btnstUpdate.visibility = View.GONE
+                                    return@observe
+                                }
                             }
                         }
 
@@ -428,10 +440,12 @@ class EndTravelFragment() : Fragment() {
                     }
                 alert = builder.create()
                 alert?.show()
+                insert = false
                 return   false
             } else {
                 // No explanation needed, we can request the permission.
                 requestLocationPermission()
+                insert = false
                 return   false
             }
         } else {
@@ -500,6 +514,7 @@ class EndTravelFragment() : Fragment() {
 
         if (!Constant.isTimeAutomatic(requireContext())) {
             msclass?.showAutomaticTimeMessage("Please update time setting to automatic")
+            insert = false
             return false
         }
 
@@ -513,10 +528,12 @@ class EndTravelFragment() : Fragment() {
         }*/
         if (binding.txtkm.text.length == 0) {
             msclass?.showMessage("Please enter your current speedometer reading")
+            insert = false
             return false
         }
         if (imageBitmap == null) {
             msclass?.showMessage("Please click image of your Speedometer")
+            insert = false
             return false
         }
 
@@ -692,47 +709,49 @@ class EndTravelFragment() : Fragment() {
         binding.btnstUpdate.setOnClickListener {
             val sd = SimpleDateFormat("MM/dd/yyyy")
             val currentDate = sd.format(Date())
-
-            CoroutineScope(Dispatchers.Main).launch {
-                val list = wordViewModel.getCurrentDateTypeTravel(currentDate, "end")
-                if (list != null && list.size != 0) {
-                    tourEnded = true
-                    val alertDialogEnd = AlertDialog.Builder(context).create()
-                    alertDialogEnd.setTitle("Crop Monitor Report")
-                    alertDialogEnd.setMessage("Tour is ended for today")
-                    alertDialogEnd.setButton("OK") { dialog, which ->
-                        /*   activity?.finish()
+            if (!insert) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val list = wordViewModel.getCurrentDateTypeTravel(currentDate, "end")
+                    if (list != null && list.size != 0) {
+                        tourEnded = true
+                        val alertDialogEnd = AlertDialog.Builder(context).create()
+                        alertDialogEnd.setTitle("Crop Monitor Report")
+                        alertDialogEnd.setMessage("Tour is ended for today")
+                        alertDialogEnd.setButton("OK") { dialog, which ->
+                            /*   activity?.finish()
                            startActivity(activity?.getIntent())*/
-                    }
-                    if (!alertDialogEnd.isShowing) {
-                        alertDialogEnd.show()
-                    }
+                        }
+                        if (!alertDialogEnd.isShowing) {
+                            alertDialogEnd.show()
+                        }
 
 
-                } else {
-                    if (is_visible) { if (!Constant.isLocationEnabled(requireContext())){
+                    } else {
+                        if (is_visible) {
+                            if (!Constant.isLocationEnabled(requireContext())) {
 
-                        AlertDialog.Builder(context)
-                            .setMessage("PLease enable your location from settings")
-                            .setPositiveButton(
-                                " Enable ",
-                                DialogInterface.OnClickListener { dialogInterface, i ->
-                                    context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                AlertDialog.Builder(context)
+                                    .setMessage("PLease enable your location from settings")
+                                    .setPositiveButton(
+                                        " Enable ",
+                                        DialogInterface.OnClickListener { dialogInterface, i ->
+                                            context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 
-                                })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                    }else {
-                        if (checkLocationPermission()) {
-                            if (validate()) {
-                                binding.llProgressBarEndTravel.visibility = View.VISIBLE
-                                lifecycleScope.launch {
-                                    addData()
+                                        })
+                                    .setNegativeButton("Cancel", null)
+                                    .show();
+                            } else {
+                                if (checkLocationPermission()) {
+                                    if (validate()) {
+                                        binding.llProgressBarEndTravel.visibility = View.VISIBLE
+                                        lifecycleScope.launch {
+                                            addData()
+                                        }
+
+                                    }
                                 }
-
                             }
                         }
-                    }
                     }
                 }
             }

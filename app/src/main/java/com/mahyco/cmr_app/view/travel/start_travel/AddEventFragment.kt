@@ -191,6 +191,7 @@ class AddEvenFragment() : Fragment() {
         cmrDataViewModel!!.errorLiveData.observe(this, androidx.lifecycle.Observer {
             if (it != null) {
                 Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+                insert = false
 //                DLog.d("CMR errorLiveData :" + it)
             }
         })
@@ -250,6 +251,8 @@ class AddEvenFragment() : Fragment() {
                 }
                 alertDialog.show()
             } else {
+
+                insert = false
                 if (!it.errorMessage.toString().equals("null")) {
                     msclass?.showMessage(it.errorMessage.toString())
                 } else {
@@ -343,20 +346,22 @@ class AddEvenFragment() : Fragment() {
                                         "Event Added successfully",
                                         Toast.LENGTH_SHORT
                                     ).show()*/
-                                        CoroutineScope(Main).launch {
-                                            if (Constant.isNetworkConnected(requireContext())) {
-                                                val tourList: MutableList<Word> =
-                                                    wordViewModel.allWords() as MutableList<Word>
-                                                if (tourList.size != 0) {
-                                                    if (insert) {
-                                                        cmrDataViewModel?.postTourEventDataAPI(
-                                                            tourList
-                                                        )
-                                                        insert = false
+                                        if (!insert) {
+                                            CoroutineScope(Main).launch {
+                                                if (Constant.isNetworkConnected(requireContext())) {
+                                                    val tourList: MutableList<Word> =
+                                                        wordViewModel.allWords() as MutableList<Word>
+                                                    if (tourList.size != 0) {
+                                                        if (!insert) {
+                                                            cmrDataViewModel?.postTourEventDataAPI(
+                                                                tourList
+                                                            )
+                                                            insert = true
+                                                        }
                                                     }
+                                                } else {
+                                                    insert = false
                                                 }
-                                            } else {
-                                                insert = false
                                             }
                                         }
                                         binding.loader.visibility = View.GONE
@@ -394,10 +399,12 @@ class AddEvenFragment() : Fragment() {
 
         if (binding.spEventtype.selectedItemPosition == 0) {
             msclass?.showMessage("Please select event type")
+            insert = false
             return false
         }
         if (!Constant.isTimeAutomatic(requireContext())) {
             msclass?.showAutomaticTimeMessage("Please update time setting to automatic")
+            insert = false
             return false
         }
         /*  if (imageBitmap == null) {
@@ -422,41 +429,40 @@ class AddEvenFragment() : Fragment() {
             binding?.ivImage?.setImageBitmap(imageBitmap)
         }
         binding.btnstUpdate.setOnClickListener {
-            insert = true
-            if (validate()) {
-                val sd = SimpleDateFormat("MM/dd/yyyy")
-                val currentDate = sd.format(Date())
-                CoroutineScope(Dispatchers.Main).launch {
-                    val list = wordViewModel.getCurrentDateTypeTravel(currentDate, "end")
+            if (!insert) {
+                if (validate()) {
+                    val sd = SimpleDateFormat("MM/dd/yyyy")
+                    val currentDate = sd.format(Date())
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val list = wordViewModel.getCurrentDateTypeTravel(currentDate, "end")
 
-                    if (list != null && list.size != 0) {
-                        tourEnded = true
-                        /*showDialog(
+                        if (list != null && list.size != 0) {
+                            tourEnded = true
+                            /*showDialog(
                         "Tour already ended for today",
                         "Tour cycle is ended for today please comeback next day"
                     )*/
-                        msclass?.showMessage("Tour is ended for today")
-                    } else {
+                            msclass?.showMessage("Tour is ended for today")
+                        } else {
 
-                        lifecycleScope.launch {
-                            if (insert == true) {
-                                if (!Constant.isLocationEnabled(requireContext())){
+                            lifecycleScope.launch {
+                                    if (!Constant.isLocationEnabled(requireContext())) {
 
-                                    AlertDialog.Builder(context)
-                                        .setMessage("PLease enable your location from settings")
-                                        .setPositiveButton(
-                                            " Enable ",
-                                            DialogInterface.OnClickListener { dialogInterface, i ->
-                                                context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                        AlertDialog.Builder(context)
+                                            .setMessage("PLease enable your location from settings")
+                                            .setPositiveButton(
+                                                " Enable ",
+                                                DialogInterface.OnClickListener { dialogInterface, i ->
+                                                    context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 
-                                            })
-                                        .setNegativeButton("Cancel", null)
-                                        .show();
-                                }else {
-                                    if (checkLocationPermission()) {
-                                        addData()
+                                                })
+                                            .setNegativeButton("Cancel", null)
+                                            .show();
+                                    } else {
+                                        if (checkLocationPermission()) {
+                                            addData()
+                                        }
                                     }
-                                }
                             }
                         }
                     }

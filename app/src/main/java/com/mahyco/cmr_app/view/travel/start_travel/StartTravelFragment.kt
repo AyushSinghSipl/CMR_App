@@ -123,6 +123,7 @@ class StartTravelFragment(
     var alert: AlertDialog? = null
     private var job: Job = Job()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    var insert = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -253,80 +254,86 @@ class StartTravelFragment(
     private fun setListner() {
 
         if (imageBitmap == null) {
-            binding.ivImage.visibility == View.GONE
+            binding.ivImage.visibility = View.GONE
         } else {
-            binding.ivImage.visibility == View.VISIBLE
+            binding.ivImage.visibility = View.VISIBLE
             binding?.ivImage?.setImageBitmap(imageBitmap)
         }
 
         val sd = SimpleDateFormat("MM/dd/yyyy")
         val currentDate = sd.format(Date())
         binding.btnstUpdate.setOnClickListener {
-
-            wordViewModel.getCurrentDateTravelType(currentDate, "start")
-                .observe(owner = viewLifecycleOwner) { words ->
-                    // Update the cached copy of the words in the adapter.
-                    words.let {
+            if (!insert) {
+                wordViewModel.getCurrentDateTravelType(currentDate, "start")
+                    .observe(owner = viewLifecycleOwner) { words ->
+                        // Update the cached copy of the words in the adapter.
+                        words.let {
 //                        Log.e("start", "onCreateView: " + it.size)
-                    }
+                        }
 
-                    if (words != null && words.size != 0) {
-                        if (isVisibleTo_User) {
-                            for (item in words) {
-                                if (item.uStartDateTime == dateTime) {
-                                    CoroutineScope(Main).launch {
-                                        if (Constant.isNetworkConnected(requireContext())) {
-                                            val tourList: MutableList<Word> =
-                                                wordViewModel.allWords() as MutableList<Word>
-                                            if (tourList.size != 0) {
-                                                cmrDataViewModel?.postTourEventDataAPI(tourList)
+                        if (words != null && words.size != 0) {
+                            if (isVisibleTo_User) {
+                                for (item in words) {
+                                    if (item.uStartDateTime == dateTime) {
+                                        CoroutineScope(Main).launch {
+                                            if (Constant.isNetworkConnected(requireContext())) {
+                                                if (!insert) {
+                                                    val tourList: MutableList<Word> =
+                                                        wordViewModel.allWords() as MutableList<Word>
+                                                    if (tourList.size != 0) {
+                                                        cmrDataViewModel?.postTourEventDataAPI(
+                                                            tourList
+                                                        )
+
+                                                        insert = true
+                                                    }
+                                                }
+                                            } else {
+                                                llProgressBarStartTravel.visibility = View.GONE
+                                                val alertDialog =
+                                                    AlertDialog.Builder(context).create()
+                                                alertDialog.setTitle("Crop Monitor Report")
+                                                alertDialog.setCancelable(false)
+                                                alertDialog.setMessage("Tour is started for today")
+                                                //alertDialog.setIcon(R.drawable.tick);
+                                                alertDialog.setButton("OK") { dialog, which ->
+                                                    activity?.finish()
+                                                    startActivity(activity?.getIntent())
+                                                    return@setButton
+                                                }
 
 
+                                                alertDialog.show()
                                             }
-                                        } else {
-                                            llProgressBarStartTravel.visibility = View.GONE
-                                            val alertDialog = AlertDialog.Builder(context).create()
-                                            alertDialog.setTitle("Crop Monitor Report")
-                                            alertDialog.setCancelable(false)
-                                            alertDialog.setMessage("Tour is started for today")
-                                            //alertDialog.setIcon(R.drawable.tick);
-                                            alertDialog.setButton("OK") { dialog, which ->
-                                                activity?.finish()
-                                                startActivity(activity?.getIntent())
-                                                return@setButton
-                                            }
-
-
-                                            alertDialog.show()
                                         }
+
+
                                     }
-
-
                                 }
                             }
                         }
                     }
-                }
-            if (!Constant.isLocationEnabled(requireContext())){
+                if (!Constant.isLocationEnabled(requireContext())) {
 
-                AlertDialog.Builder(context)
-                    .setMessage("PLease enable your location from settings")
-                    .setPositiveButton(
-                        " Enable ",
-                        DialogInterface.OnClickListener { dialogInterface, i ->
-                            context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    AlertDialog.Builder(context)
+                        .setMessage("PLease enable your location from settings")
+                        .setPositiveButton(
+                            " Enable ",
+                            DialogInterface.OnClickListener { dialogInterface, i ->
+                                context?.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 
-                        })
-                    .setNegativeButton("Cancel", null)
-                    .show();
-            }else {
-                if (checkLocationPermission()) {
-                    if (validate()) {
-                        binding.llProgressBarStartTravel.visibility = View.VISIBLE
-                        lifecycleScope.launch {
-                            addData()
+                            })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+                } else {
+                    if (checkLocationPermission()) {
+                        if (validate()) {
+                            binding.llProgressBarStartTravel.visibility = View.VISIBLE
+                            lifecycleScope.launch {
+                                addData()
+                            }
+
                         }
-
                     }
                 }
             }
@@ -429,10 +436,14 @@ class StartTravelFragment(
                     ) { dialog, id -> activity?.finish() }
                  alert = builder.create()
                 alert?.show()
+
+                insert = false
                 return   false
+
             } else {
                 // No explanation needed, we can request the permission.
                 requestLocationPermission()
+                insert = false
                 return   false
             }
         } else {
@@ -462,6 +473,7 @@ class StartTravelFragment(
             if (it != null) {
                 Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
                 DLog.d("CMR errorLiveData :" + it)
+                insert = false
             }
         })
 
@@ -532,6 +544,7 @@ class StartTravelFragment(
                 }
                 alertDialog.show()
             } else {
+                insert = false
                 if (!it.errorMessage.toString().equals("null")) {
                     msclass?.showMessage(it.errorMessage.toString())
                 } else {
@@ -596,11 +609,13 @@ class StartTravelFragment(
 
         if (!Constant.isTimeAutomatic(requireContext())) {
             msclass?.showAutomaticTimeMessage("Please update time setting to automatic")
+            insert = false
             return false
         }
 
         if (binding.spvehicletype.selectedItemPosition == 0) {
             msclass?.showMessage("Please select vehicle type")
+            insert = false
             return false
         }
 
@@ -614,11 +629,13 @@ class StartTravelFragment(
               return false
           }*/
         if (binding.txtkm.text.length == 0) {
+            insert = false
             msclass?.showMessage("Please enter your current speedometer reading")
             return false
         }
         if (imageBitmap == null) {
             msclass?.showMessage("Please click image of your Speedometer")
+            insert = false
             return false
         }
 
