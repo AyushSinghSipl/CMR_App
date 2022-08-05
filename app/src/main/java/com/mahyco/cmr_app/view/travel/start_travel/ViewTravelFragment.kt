@@ -101,19 +101,19 @@ class ViewTravelFragment() : Fragment() {
                         binding.textViewStartKm.text = item.uKmReadingStart
                         binding.textViewEndKm.text = item.uKmReadingEnd
 
-                        val decodedString: ByteArray =
-                            Base64.decode(item.uKmImageStart, Base64.DEFAULT)
+                      /*  val decodedString: ByteArray =
+                            Base64.decode(item.uKmImageStart, Base64.DEFAULT)*/
                         val decodedByte: Bitmap =
-                            BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                            BitmapFactory.decodeByteArray(item.uKmImageStart, 0, item.uKmImageStart.size)
                         binding.imageViewStart.setImageBitmap(decodedByte)
 
-                        val decodedStringEnd: ByteArray =
-                            Base64.decode(item.uKmImageEnd, Base64.DEFAULT)
+                       /* val decodedStringEnd: ByteArray =
+                            Base64.decode(item.uKmImageEnd, Base64.DEFAULT)*/
                         val decodedByteEnd: Bitmap =
                             BitmapFactory.decodeByteArray(
-                                decodedStringEnd,
+                                item.uKmImageEnd,
                                 0,
-                                decodedStringEnd.size
+                                item.uKmImageEnd.size
                             )
                         binding.imageViewEnd.setImageBitmap(decodedByteEnd)
                     } else {

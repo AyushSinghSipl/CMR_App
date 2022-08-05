@@ -655,13 +655,13 @@ class StartTravelFragment(
         val sd = SimpleDateFormat("MM/dd/yyyy")
         val currentDate = sd.format(Date())
 
-        var encoded: String = ""
+       // var encoded: byt = ""
 
-        encoded = if (binding.spvehicletype.selectedItem.toString() != "OTHER") {
+        var encoded = if (binding.spvehicletype.selectedItem.toString() != "OTHER") {
             val byteArrayOutputStream = ByteArrayOutputStream()
             imageBitmap?.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
-            val byteArray = byteArrayOutputStream.toByteArray()
-            Base64.encodeToString(byteArray, Base64.DEFAULT)
+             byteArrayOutputStream.toByteArray()
+           // Base64.encodeToString(byteArray, Base64.DEFAULT)
         } else {
             "No Image"
         }
@@ -686,7 +686,7 @@ class StartTravelFragment(
             "",
             "",
             binding.txtkm.text.toString(),
-            encoded.encodeToByteArray(),
+            encoded as ByteArray,
             "0",
             "".toByteArray(),
             "".toByteArray(),

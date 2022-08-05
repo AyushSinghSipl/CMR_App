@@ -64,9 +64,9 @@ class EventsAdapter(val context:Context,val items: List<Word> ) : BaseExpandable
         expandedListTextViewEventDiscription.text = event.uEventDescription
 
         if (event.uKmImageEvent != null && event.uKmImageEvent.size != 0){
-            val decodedStringEnd: ByteArray = Base64.decode(event.uKmImageEvent, Base64.DEFAULT)
+//            val decodedStringEnd: ByteArray = Base64.decode(event.uKmImageEvent, Base64.DEFAULT)
             val decodedByteEnd: Bitmap =
-                BitmapFactory.decodeByteArray(decodedStringEnd, 0, decodedStringEnd.size)
+                BitmapFactory.decodeByteArray(event.uKmImageEvent, 0, event.uKmImageEvent.size)
             expandedListimageViewEvent.setImageBitmap(decodedByteEnd)
             expandedListimageViewEvent.visibility = View.VISIBLE
             expandedListlayoutImage.visibility = View.VISIBLE

@@ -827,13 +827,15 @@ class EndTravelFragment() : Fragment() {
         val sd = SimpleDateFormat("MM/dd/yyyy")
         val currentDate = sd.format(Date())
 
-        var encoded: String = ""
 
-        encoded = if (!binding.spvehicletype.text.equals("OTHER")) {
+
+
+
+        var encoded = if (!binding.spvehicletype.text.equals("OTHER")) {
             val byteArrayOutputStream = ByteArrayOutputStream()
             imageBitmap?.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
-            val byteArray = byteArrayOutputStream.toByteArray()
-            Base64.encodeToString(byteArray, Base64.DEFAULT)
+            byteArrayOutputStream.toByteArray()
+            // Base64.encodeToString(byteArray, Base64.DEFAULT)
         } else {
             "No Image"
         }
@@ -857,7 +859,7 @@ class EndTravelFragment() : Fragment() {
             travelList?.uKmReadingStart.toString(),
             travelList?.uKmImageStart!!,
             binding.txtkm.text.toString(),
-            encoded.encodeToByteArray(),
+            encoded as ByteArray,
             "".encodeToByteArray(),
             "0",
             "end",

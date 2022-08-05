@@ -30,6 +30,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import okio.internal.commonToUtf8String
+import java.io.IOException
 import java.util.*
 
 
@@ -196,26 +197,32 @@ class CMRDataViewModel(application: Application) : BaseViewModel(application) {
             if (item.uStatus == "0") {
 
 
-               /*val startImage = Base64.encodeToString(item.uKmImageStart, Base64.DEFAULT)
-               val endImage = Base64.encodeToString(item.uKmImageEnd, Base64.DEFAULT)
-               val eventImage = Base64.encodeToString(item.uKmImageEvent, Base64.DEFAULT)*/
-
-                val decodedStringEvent: ByteArray =
-                    android.util.Base64.decode(item.uKmImageEvent, android.util.Base64.DEFAULT)
-
-                val eventImage = Base64.getEncoder().encodeToString(decodedStringEvent)
-
-                val decodedStringEnd: ByteArray =
-                    android.util.Base64.decode(item.uKmImageEnd, android.util.Base64.DEFAULT)
-
-                val endImage = Base64.getEncoder().encodeToString(decodedStringEnd)
-
-                val decodedStringstart: ByteArray =
-                    android.util.Base64.decode(item.uKmImageStart, android.util.Base64.DEFAULT)
-
-                val startImage = Base64.getEncoder().encodeToString(decodedStringstart)
+                /*val startImage = Base64.encodeToString(item.uKmImageStart, Base64.DEFAULT)
+                val endImage = Base64.encodeToString(item.uKmImageEnd, Base64.DEFAULT)
+                val eventImage = Base64.encodeToString(item.uKmImageEvent, Base64.DEFAULT)*/
+                var eventImage = ""
+                var endImage = ""
+                var startImage = ""
+                try {
 
 
+                   /* val decodedStringEvent: ByteArray =
+                        android.util.Base64.decode(item.uKmImageEvent, android.util.Base64.DEFAULT)*/
+
+                    eventImage = Base64.getEncoder().encodeToString(item.uKmImageEvent)
+
+                   /* val decodedStringEnd: ByteArray =
+                        android.util.Base64.decode(item.uKmImageEnd, android.util.Base64.DEFAULT)*/
+
+                    endImage = Base64.getEncoder().encodeToString(item.uKmImageEnd)
+
+                 /*   val decodedStringstart: ByteArray =
+                        android.util.Base64.decode(item.uKmImageStart, android.util.Base64.DEFAULT)*/
+
+                    startImage = Base64.getEncoder().encodeToString(item.uKmImageStart)
+                } catch (e: IOException) {
+                    Log.e("CRMDataViewModel", "postTourEventDataAPI:exception  " + e.message)
+                }
 
 
                 val startlatlng = item.uStartLat + "," + item.uStartLng

@@ -534,10 +534,12 @@ class AddEvenFragment() : Fragment() {
         val byteArrayOutputStream = ByteArrayOutputStream()
         imageBitmap?.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
         val byteArray = byteArrayOutputStream.toByteArray()
-        val encoded: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        val encoded = byteArrayOutputStream.toByteArray()
         val eventId = activityList?.get(binding.spEventtype.selectedItemPosition)?.trId
         val eventType =
             activityList?.get(binding.spEventtype.selectedItemPosition)?.activityDescription
+
+
 
 
         val travel = Word(
@@ -558,7 +560,7 @@ class AddEvenFragment() : Fragment() {
             "".toByteArray(),
             "0",
             "".toByteArray(),
-            encoded.toByteArray(),
+            encoded,
             "0",
             "add_event",
             eventType.toString(),
