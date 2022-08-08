@@ -837,7 +837,9 @@ class EndTravelFragment() : Fragment() {
             byteArrayOutputStream.toByteArray()
             // Base64.encodeToString(byteArray, Base64.DEFAULT)
         } else {
-            "No Image"
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            //   imageBitmap?.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
+            byteArrayOutputStream.toByteArray()
         }
 
         val vehicleId = travelList?.uVehicleId

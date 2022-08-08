@@ -663,7 +663,9 @@ class StartTravelFragment(
              byteArrayOutputStream.toByteArray()
            // Base64.encodeToString(byteArray, Base64.DEFAULT)
         } else {
-            "No Image"
+            val byteArrayOutputStream = ByteArrayOutputStream()
+         //   imageBitmap?.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream)
+            byteArrayOutputStream.toByteArray()
         }
 
 
